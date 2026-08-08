@@ -69,3 +69,5 @@ env/
 *.tar.xz
 *.tar.zst
 ```
+SpechToText/ffmpeg.exe
+SpechToText/ffprobe.exe
