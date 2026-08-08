@@ -1,7 +1,5 @@
 ```
 # Windows batch files
-*.bat
-*.cmd
 
 # Logs and temp files
 *.log
