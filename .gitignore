@@ -1,7 +1,6 @@
 ```
 # Executables and binaries
-*.exe
-*.bat
+
 
 # Build artifacts
 dist/
