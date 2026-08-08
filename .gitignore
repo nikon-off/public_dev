@@ -51,3 +51,21 @@ Expected Output:
     #Original rules preserved
     *.log
 Final reminder: Output ONLY the .gitignore content. If nothing should be ignored, output NOTHING.
+.env
+*.pyc
+.o
+.obj
+dist/
+build/
+.venv/
+venv/
+node_modules/
+*.log
+*.tmp
+*.swp
+.env
+.env.local
+.vscode/
+.idea/
+SpechToText/ffmpeg.exe
+SpechToText/ffprobe.exe
