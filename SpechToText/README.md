@@ -45,9 +45,22 @@ set "CONDA_PATH=C:\Users\Kolya\anaconda3"
 ## Быстрый старт
 
 1. Убедитесь, что установлен Python 3.8+
-2. Установите зависимости: `pip install whisperx torch python-dotenv`
-3. Создайте файл `.env` с вашим токеном Hugging Face: `HF_TOKEN=ваш_токен`
-4. Запустите CLI: `python main.py`
+2. Создайте и активируйте Conda окружение (рекомендуется):
+   ```bash
+   conda create -n whisper_env python=3.10
+   conda activate whisper_env
+   ```
+3. Установите зависимости:
+   ```bash
+   pip install whisperx torch python-dotenv
+   ```
+4. Создайте файл `.env` с вашим токеном Hugging Face: `HF_TOKEN=ваш_токен`
+5. Запустите CLI: `python main.py`
+
+**Примечание:** Если вы столкнулись с ошибкой `ModuleNotFoundError: No module named 'dotenv'`, убедитесь, что пакет `python-dotenv` установлен в вашем окружении:
+```bash
+pip install python-dotenv
+```
 
 ## Использование
 
@@ -134,10 +147,19 @@ python main.py -f audio.mp3 -o results/transcript.txt
 ## Требования
 
 - Python 3.8+
+- Conda (рекомендуется для управления окружением)
 - whisperx
 - torch
 - python-dotenv
 - tkinter (для GUI выбора файла)
+- FFmpeg (должен быть установлен в системе)
+
+**Установка зависимостей:**
+```bash
+conda create -n whisper_env python=3.10
+conda activate whisper_env
+pip install whisperx torch python-dotenv
+```
 
 ## Настройка
 
@@ -234,3 +256,79 @@ SpechToText/
 4. Указать токен в файле `.env` или в настройках
 
 Без токена диаризация не будет работать!
+
+## Устранение неполадок (Troubleshooting)
+
+### Ошибка: `ModuleNotFoundError: No module named 'dotenv'`
+
+Эта ошибка возникает, если пакет `python-dotenv` не установлен в вашем Conda окружении.
+
+**Решение:**
+```bash
+conda activate whisper_env
+pip install python-dotenv
+```
+
+Или установите все зависимости сразу:
+```bash
+conda activate whisper_env
+pip install whisperx torch python-dotenv
+```
+
+### Предупреждение о системной установке MSMPI (Windows)
+
+**Сообщение:**
+```
+You seem to have a system wide installation of MSMPI.
+Due to the way DLL loading works on windows, system wide installation
+will probably overshadow the conda installation.
+```
+
+**Причина:** На вашей системе установлена глобальная версия Microsoft MPI (MSMPI), которая конфликтует с версией в Conda окружении.
+
+**Варианты решения:**
+
+**Вариант 1: Удалить системную установку MSMPI (рекомендуется)**
+1. Откройте «Панель управления» → «Программы и компоненты»
+2. Найдите «Microsoft MPI» или «MS-MPI» в списке программ
+3. Удалите его
+4. Удалите файлы `C:\Windows\System32\msmpi*.dll` (если существуют)
+
+**⚠️ Внимание:** Это может нарушить работу другого ПО, использующего системную установку MSMPI.
+
+**Вариант 2: Переустановить пакеты в Conda окружении**
+```bash
+conda activate whisper_env
+pip uninstall mpi4py msmpi
+pip install mpi4py --force-reinstall
+```
+
+**Вариант 3: Игнорировать предупреждение**
+Если транскрипция работает корректно, можно игнорировать это предупреждение. Оно не влияет на базовую функциональность WhisperX.
+
+### Ошибка: FFmpeg не найден
+
+Убедитесь, что FFmpeg установлен по пути `C:\ffmpeg\bin\` или обновите пути в `config/settings.py`.
+
+Проверить установку:
+```bash
+ffmpeg -version
+```
+
+Если FFmpeg не установлен, скачайте его с [официального сайта](https://ffmpeg.org/download.html) и распакуйте в `C:\ffmpeg\`.
+
+### Ошибка: Torch/CUDA не работает
+
+Проверьте наличие CUDA:
+```python
+import torch
+print(torch.cuda.is_available())
+```
+
+Если возвращает `False`, но у вас есть NVIDIA GPU:
+1. Убедитесь, что установлены драйверы NVIDIA
+2. Переустановите torch с поддержкой CUDA:
+   ```bash
+   pip uninstall torch torchvision torchaudio
+   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+   ```
