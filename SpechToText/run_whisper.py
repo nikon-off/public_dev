@@ -5,6 +5,9 @@ import os
 import sys
 import tkinter as tk
 from tkinter import filedialog
+from dotenv import load_dotenv
+
+load_dotenv()  # загружает .env из текущей директории
 
 # Установка путей к FFmpeg и FFprobe из C:\ffmpeg\bin
 os.environ["FFMPEG_PATH"] = r"C:\ffmpeg\bin\ffmpeg.exe"
@@ -128,11 +131,12 @@ def format_transcript(result):
     return "\n".join(formatted_lines)
 
 # --- НАСТРОЙКИ ---
-# Вставьте ваш токен от Hugging Face здесь!
-from dotenv import load_dotenv
 
-load_dotenv()  # загружает .env из текущей директории
 HF_TOKEN = os.environ.get("HF_TOKEN")
+
+if not HF_TOKEN:
+    print("⚠️ ВНИМАНИЕ: Токен HF_TOKEN не найден! Диаризация будет пропущена.")
+    print("Создайте файл .env рядом со скриптом и добавьте туда: HF_TOKEN=ваш_новый_токен")
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 COMPUTE_TYPE = "float16" if DEVICE == "cuda" else "int8"
