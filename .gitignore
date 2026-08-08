@@ -1,5 +1,18 @@
 ```
-# Windows batch files
+# Executables and binaries
+*.exe
+*.bat
+
+# Build artifacts
+dist/
+build/
+*.pyc
+__pycache__/
+
+# Dependencies
+.venv/
+venv/
+node_modules/
 
 # Logs and temp files
 *.log
@@ -9,30 +22,9 @@
 # Environment
 .env
 .env.local
-.env.*
+*.env.*
 
 # Editors
 .vscode/
 .idea/
-
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-env/
-venv/
-.venv/
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Build artifacts
-build/
-dist/
-*.egg-info/
 ```
-# No changes needed - only a README.md file was modified, which is a source/config file and should not be ignored
-.env
-SpechToText/ffmpeg.exe
-SpechToText/ffprobe.exe
