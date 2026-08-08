@@ -1,114 +1,196 @@
-# Speech-to-Text Project using WhisperX
+# Speech-to-Text с диаризацией спикеров (WhisperX)
 
-This project provides tools for transcribing audio files with speaker diarization.
+Этот проект представляет собой инструмент для транскрипции аудиофайлов с диаризацией спикеров (разделением по говорящим).
 
-## Quick Start
+## Быстрый старт
 
-1. Make sure you have Python 3.8+ installed
-2. Install dependencies: `pip install whisperx torch python-dotenv`
-3. Create a `.env` file with your Hugging Face token: `HF_TOKEN=your_token_here`
-4. Run the CLI: `python main.py`
+1. Убедитесь, что установлен Python 3.8+
+2. Установите зависимости: `pip install whisperx torch python-dotenv`
+3. Создайте файл `.env` с вашим токеном Hugging Face: `HF_TOKEN=ваш_токен`
+4. Запустите CLI: `python main.py`
 
-## Usage
+## Использование
 
-### Default behavior (opens file dialog)
+### Режим по умолчанию (открывает окно выбора файла)
+
 ```bash
 python main.py
 ```
-This will open a file selection dialog where you can choose an audio file. After selection, the script will perform the full transcription cycle and save the result.
 
-### Command line mode
+Откроется окно выбора файла, где вы можете выбрать аудиофайл. После выбора скрипт выполнит полный цикл транскрипции и сохранит результат.
+
+### Режим командной строки
+
 ```bash
 python main.py --file audio.mp3
 ```
 
-### With custom output file
+Или коротко:
+
+```bash
+python main.py -f audio.mp3
+```
+
+### С указанием выходного файла
+
 ```bash
 python main.py -f meeting.wav -o transcript.txt
 ```
 
-### Specify model and language
+### С выбором модели и языка
+
 ```bash
 python main.py -f audio.mp3 -m large-v2 -l ru
 ```
 
-### Without GPU
+### Без использования GPU
+
 ```bash
 python main.py -f audio.mp3 -d cpu
 ```
 
-### Show help
+### Показать справку
+
 ```bash
 python main.py --help
 ```
 
-## Requirements
+## Параметры командной строки
+
+| Параметр | Короткая форма | Описание | По умолчанию |
+|----------|----------------|----------|--------------|
+| `--file` | `-f` | Путь к аудиофайлу | Открывает окно выбора |
+| `--output` | `-o` | Путь для сохранения результата | Автоматически (рядом с аудио) |
+| `--model` | `-m` | Модель Whisper (tiny, base, small, medium, large-v2, large-v3) | `large-v2` |
+| `--language` | `-l` | Язык аудио (ru, en, и т.д.) | `ru` |
+| `--device` | `-d` | Устройство для вычислений (cuda, cpu, mps) | `cuda` (если доступно) |
+| `--batch_size` | `-b` | Размер пакета для транскрипции | `16` |
+| `--min_speakers` | — | Минимальное количество спикеров | `1` |
+| `--max_speakers` | — | Максимальное количество спикеров | `10` |
+| `--help` | `-h` | Показать справку и выйти | — |
+
+## Примеры использования
+
+### Распознать русское аудио на CPU:
+```bash
+python main.py -f meeting.wav -l ru --device cpu
+```
+
+### Использовать модель medium с английским языком:
+```bash
+python main.py -f interview.mp3 -m medium -l en
+```
+
+### Указать точное количество спикеров:
+```bash
+python main.py -f discussion.wav --min_speakers 2 --max_speakers 2
+```
+
+### Сохранить результат в конкретный файл:
+```bash
+python main.py -f audio.mp3 -o results/transcript.txt
+```
+
+## Требования
 
 - Python 3.8+
 - whisperx
 - torch
 - python-dotenv
-- tkinter (for GUI file picker)
+- tkinter (для GUI выбора файла)
 
-## Configuration
+## Настройка
 
-Edit `config/settings.py` to change default values:
-- `WHISPER_MODEL`: Whisper model to use (default: large-v2)
-- `DEFAULT_LANGUAGE`: Language code (default: ru)
-- `BATCH_SIZE`: Batch size for transcription (default: 16)
-- `FFMPEG_PATH`: Path to FFmpeg executable (Windows)
-- `FFPROBE_PATH`: Path to FFprobe executable (Windows)
+Откройте `config/settings.py` для изменения параметров по умолчанию:
+- `WHISPER_MODEL`: Модель Whisper (по умолчанию: large-v2)
+- `DEFAULT_LANGUAGE`: Код языка (по умолчанию: ru)
+- `BATCH_SIZE`: Размер пакета для транскрипции (по умолчанию: 16)
+- `FFMPEG_PATH`: Путь к исполняемому файлу FFmpeg (Windows)
+- `FFPROBE_PATH`: Путь к исполняемому файлу FFprobe (Windows)
 
-## Environment Variables
+## Переменные окружения
 
-- `HF_TOKEN`: Hugging Face token for speaker diarization (required for diarization)
+- `HF_TOKEN`: Токен Hugging Face для диаризации спикеров (обязателен для диаризации)
 
-Create a `.env` file in the project directory:
+Создайте файл `.env` в директории проекта:
 ```
-HF_TOKEN=your_huggingface_token_here
+HF_TOKEN=ваш_токен_huggingface
 ```
 
-## Note on FFmpeg
+## Примечание о FFmpeg
 
-On Windows, ensure FFmpeg is installed at `C:\ffmpeg\bin\` or update the paths in `config/settings.py`.
-On Linux/Mac, install via package manager (apt, brew, etc.) and update paths accordingly.
+**Windows:** Убедитесь, что FFmpeg установлен в `C:\ffmpeg\bin\` или обновите пути в `config/settings.py`.
 
-## Project Structure
+**Linux/Mac:** Установите через менеджер пакетов (apt, brew и т.д.) и обновите пути соответствующим образом.
+
+Пример установки:
+```bash
+# Ubuntu/Debian
+sudo apt update && sudo apt install ffmpeg
+
+# macOS
+brew install ffmpeg
+```
+
+## Структура проекта
 
 ```
 SpechToText/
-├── main.py              # CLI entry point (run this to use the tool)
-├── run_whisper.py       # Original script (kept for reference)
-├── README.md            # This file
-├── config/              # Configuration module
-│   ├── __init__.py      # Config package exports
-│   └── settings.py      # Application settings and environment setup
-├── core/                # Core business logic
-│   ├── __init__.py      # Core package exports
-│   └── transcriber.py   # Transcription and diarization functions
-└── utils/               # Utility functions
-    ├── __init__.py      # Utils package exports
-    ├── file_utils.py    # File operations and GUI dialogs
-    └── formatter.py     # Text formatting functions
+├── main.py              # Точка входа CLI (запускайте это для работы)
+├── run_whisper.py       # Оригинальный скрипт (сохранён для справки)
+├── README.md            # Этот файл
+├── config/              # Модуль конфигурации
+│   ├── __init__.py      # Экспорт конфигурации
+│   └── settings.py      # Настройки приложения и переменные окружения
+├── core/                # Основная бизнес-логика
+│   ├── __init__.py      # Экспорт ядра
+│   └── transcriber.py   # Функции транскрипции и диаризации
+└── utils/               # Вспомогательные функции
+    ├── __init__.py      # Экспорт утилит
+    ├── file_utils.py    # Операции с файлами и GUI диалоги
+    └── formatter.py     # Функции форматирования текста
 ```
 
-## Module Descriptions
+## Описание модулей
 
 ### config/
-Contains application configuration and settings.
-- `settings.py`: Settings class with all configurable parameters, device detection, and environment variable management.
+Содержит конфигурацию и настройки приложения.
+- `settings.py`: Класс Settings со всеми настраиваемыми параметрами, определением устройства и управлением переменными окружения.
 
 ### core/
-Contains the main business logic for speech processing.
-- `transcriber.py`: Functions for audio transcription, alignment, diarization, and speaker assignment. The main function `transcribe_and_diarize()` orchestrates the entire pipeline.
+Содержит основную бизнес-логику для обработки речи.
+- `transcriber.py`: Функции для транскрипции аудио, выравнивания, диаризации и назначения спикеров. Основная функция `transcribe_and_diarize()` управляет всем пайплайном.
 
 ### utils/
-Contains utility/helper functions.
-- `file_utils.py`: File selection dialog (GUI) and output path generation.
-- `formatter.py`: Transcript formatting to group utterances by speaker.
+Содержит вспомогательные функции.
+- `file_utils.py`: Диалог выбора файла (GUI) и генерация пути вывода.
+- `formatter.py`: Форматирование транскрипта для группировки реплик по спикерам.
 
 ### main.py
-Command-line interface entry point. Provides argument parsing and orchestrates the workflow using modules from `config/`, `core/`, and `utils/`.
+Точка входа интерфейса командной строки. Предоставляет парсинг аргументов и организует рабочий процесс с использованием модулей из `config/`, `core/` и `utils/`.
 
 ### run_whisper.py
-Original monolithic script (preserved for reference). All functionality has been moved to the modular structure above.
+Оригинальный монолитный скрипт (сохранён для справки). Вся функциональность перенесена в модульную структуру выше.
+
+## Как это работает
+
+1. **Выбор файла**: Пользователь выбирает аудиофайл через проводник (или указывает в командной строке)
+2. **Транскрипция**: WhisperX преобразует речь в текст с таймкодами
+3. **Выравнивание**: Выравнивание текста с аудио для точных временных меток
+4. **Диаризация**: Pyannote определяет сегменты с разными спикерами
+5. **Сопоставление**: Сегменты транскрипции сопоставляются со спикерами
+6. **Форматирование**: Результат группируется по спикерам для удобного чтения
+7. **Сохранение**: Итоговый текст сохраняется в `.txt` файл рядом с аудиофайлом
+
+## Важная информация о диаризации спикеров
+
+Для использования диаризации спикеров необходимо:
+
+1. Зарегистрироваться на [Hugging Face](https://huggingface.co/)
+2. Принять лицензионные соглашения для моделей:
+   - [pyannote/speaker-diarization-3.1](https://huggingface.co/pyannote/speaker-diarization-3.1)
+   - [pyannote/segmentation-3.0](https://huggingface.co/pyannote/segmentation-3.0)
+3. Создать токен доступа с правами `read`
+4. Указать токен в файле `.env` или в настройках
+
+Без токена диаризация не будет работать!
