@@ -129,7 +129,10 @@ def format_transcript(result):
 
 # --- НАСТРОЙКИ ---
 # Вставьте ваш токен от Hugging Face здесь!
-HF_TOKEN = "HF_TOKEN_PLACEHOLDER" 
+from dotenv import load_dotenv
+
+load_dotenv()  # загружает .env из текущей директории
+HF_TOKEN = os.environ.get("HF_TOKEN")
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 COMPUTE_TYPE = "float16" if DEVICE == "cuda" else "int8"
