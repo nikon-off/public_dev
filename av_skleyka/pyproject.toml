@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "audio-video-syncer"
+version = "0.1.0"
+description = "Console application for audio and video synchronization without re-encoding"
+requires-python = ">=3.8"
+dependencies = [
+    "click",
+    "tqdm",
+    "psutil",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+]
+
+[project.scripts]
+sync-av = "main:cli"
