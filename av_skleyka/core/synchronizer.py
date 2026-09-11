@@ -1,7 +1,6 @@
 """Модуль оркестрации процесса синхронизации аудио и видео."""
 
 import subprocess
-import re
 from typing import Optional, Callable
 
 from config.settings import MAX_RAM_GB
@@ -129,12 +128,8 @@ class Synchronizer:
             line_count = 0
             # ИСПРАВЛЕНИЕ: Читаем stderr построчно, чтобы не переполнять буфер
             for line in process.stderr:
-                # Парсим время из строки вида "time=01:23:45.67"
-                time_match = re.search(r'time=(\d{2}):(\d{2}):(\d{2})\.(\d+)', line)
-                if time_match:
-                    h, m, s, ms = time_match.groups()
-                    current_seconds = int(h) * 3600 + int(m) * 60 + float(f"{s}.{ms}")
-                    tracker.update(current_seconds)
+                # ИСПРАВЛЕНИЕ: Передаем сырую строку в трекер, он сам распарсит
+                tracker.update(line)
                 
                 line_count += 1
 
