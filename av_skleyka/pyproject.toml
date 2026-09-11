@@ -20,3 +20,9 @@ dev = [
 
 [project.scripts]
 sync-av = "main:cli"
+
+[tool.setuptools]
+py-modules = ["main"]
+
+[tool.setuptools.packages.find]
+include = ["core*", "config*", "utils*"]
