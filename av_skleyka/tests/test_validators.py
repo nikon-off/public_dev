@@ -1,6 +1,5 @@
 """Unit tests for validators module."""
 
-import logging
 import pytest
 from unittest.mock import patch
 
@@ -21,19 +20,20 @@ class TestValidateFileExists:
         assert result is True
 
     def test_file_not_exists_returns_false_and_logs_error(self, tmp_path):
-        """Test that function raises FileNotFoundError and logs error for non-existent file."""
+        """Test that function returns False and logs error for non-existent file."""
         non_existent_file = str(tmp_path / "non_existent.txt")
 
-        with pytest.raises(FileNotFoundError) as exc_info:
-            with patch('utils.validators.logger') as mock_logger:
-                validate_file_exists(non_existent_file)
-                # Verify logger.error was called
-                mock_logger.error.assert_called_once()
-                call_args = mock_logger.error.call_args[0][0]
-                assert 'Файл не найден' in call_args
-                assert non_existent_file in call_args
+        with patch('utils.validators.logger') as mock_logger:
+            result = validate_file_exists(non_existent_file)
 
-        assert non_existent_file in str(exc_info.value)
+            # Verify function returned False
+            assert result is False
+
+            # Verify logger.error was called
+            mock_logger.error.assert_called_once()
+            call_args = mock_logger.error.call_args[0][0]
+            assert 'Файл не найден' in call_args
+            assert non_existent_file in call_args
 
 
 class TestValidateOffset:
@@ -44,26 +44,35 @@ class TestValidateOffset:
         result = validate_offset(offset=5.0, video_duration=120.0)
         assert result is True
 
-    def test_offset_equals_duration_raises_value_error(self):
-        """Test that function raises ValueError when offset >= duration."""
-        with pytest.raises(ValueError) as exc_info:
-            validate_offset(offset=120.0, video_duration=120.0)
+    def test_offset_equals_duration_returns_false(self):
+        """Test that function returns False when offset >= duration."""
+        with patch('utils.validators.logger') as mock_logger:
+            result = validate_offset(offset=120.0, video_duration=120.0)
 
-        assert 'не может быть больше или равно' in str(exc_info.value)
+            assert result is False
+            mock_logger.error.assert_called_once()
+            call_args = mock_logger.error.call_args[0][0]
+            assert 'не может быть больше или равно' in call_args
 
-    def test_offset_greater_than_duration_raises_value_error(self):
-        """Test that function raises ValueError when offset > duration."""
-        with pytest.raises(ValueError) as exc_info:
-            validate_offset(offset=150.0, video_duration=120.0)
+    def test_offset_greater_than_duration_returns_false(self):
+        """Test that function returns False when offset > duration."""
+        with patch('utils.validators.logger') as mock_logger:
+            result = validate_offset(offset=150.0, video_duration=120.0)
 
-        assert 'не может быть больше или равно' in str(exc_info.value)
+            assert result is False
+            mock_logger.error.assert_called_once()
+            call_args = mock_logger.error.call_args[0][0]
+            assert 'не может быть больше или равно' in call_args
 
-    def test_negative_offset_raises_value_error(self):
-        """Test that function raises ValueError for negative offset."""
-        with pytest.raises(ValueError) as exc_info:
-            validate_offset(offset=-5.0, video_duration=120.0)
+    def test_negative_offset_returns_false(self):
+        """Test that function returns False for negative offset."""
+        with patch('utils.validators.logger') as mock_logger:
+            result = validate_offset(offset=-5.0, video_duration=120.0)
 
-        assert 'не может быть отрицательным' in str(exc_info.value)
+            assert result is False
+            mock_logger.error.assert_called_once()
+            call_args = mock_logger.error.call_args[0][0]
+            assert 'не может быть отрицательным' in call_args
 
     def test_zero_offset_returns_true(self):
         """Test that zero offset is valid."""
