@@ -13,10 +13,13 @@ def validate_file_exists(file_path: str) -> bool:
         
     Returns:
         True, если файл существует, иначе False.
+    
+    Raises:
+        FileNotFoundError: Если файл не найден.
     """
     if not os.path.isfile(file_path):
         logger.error(f'Файл не найден: {file_path}')
-        return False
+        raise FileNotFoundError(f'Файл не найден: {file_path}')
     return True
 
 
@@ -33,16 +36,22 @@ def validate_offset(offset: float, video_duration: float) -> bool:
         
     Returns:
         True, если смещение корректно, иначе False.
+    
+    Raises:
+        ValueError: Если смещение некорректно.
     """
     if offset < 0:
         logger.error(f'Смещение не может быть отрицательным: {offset}')
-        return False
+        raise ValueError(f'Смещение не может быть отрицательным: {offset}')
     
     if offset >= video_duration:
         logger.error(
             f'Смещение ({offset} сек) не может быть больше или равно '
             f'длительности видео ({video_duration} сек)'
         )
-        return False
+        raise ValueError(
+            f'Смещение ({offset} сек) не может быть больше или равно '
+            f'длительности видео ({video_duration} сек)'
+        )
     
     return True

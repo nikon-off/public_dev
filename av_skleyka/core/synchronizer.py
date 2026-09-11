@@ -1,7 +1,7 @@
 """Модуль оркестрации процесса синхронизации аудио и видео."""
 
 import subprocess
-from typing import Optional
+from typing import Optional, Callable
 
 from config.settings import MAX_RAM_GB
 from core.media_processor import build_ffmpeg_command, get_duration
@@ -29,6 +29,8 @@ class Synchronizer:
         audio_path: Путь к аудиофайлу.
         offset: Смещение аудио относительно видео в секундах.
         memory_monitor: Экземпляр монитора памяти.
+        _context_callback: Callback для передачи process и tracker наружу.
+        _output_callback: Callback для передачи output_path наружу.
     """
 
     def __init__(self, video_path: str, audio_path: str, offset: float):
@@ -43,6 +45,24 @@ class Synchronizer:
         self.audio_path = audio_path
         self.offset = offset
         self.memory_monitor = MemoryMonitor()
+        self._context_callback: Optional[Callable] = None
+        self._output_callback: Optional[Callable] = None
+
+    def set_context_callback(self, callback: Callable):
+        """Устанавливает callback для передачи process и tracker.
+
+        Args:
+            callback: Функция, принимающая (process, tracker).
+        """
+        self._context_callback = callback
+
+    def set_output_callback(self, callback: Callable):
+        """Устанавливает callback для передачи output_path.
+
+        Args:
+            callback: Функция, принимающая output_path.
+        """
+        self._output_callback = callback
 
     def run(self) -> str:
         """Запускает полный процесс синхронизации.
@@ -59,10 +79,8 @@ class Synchronizer:
         try:
             # Шаг 1: Валидация файлов
             logger.info('Начало валидации файлов...')
-            if not validate_file_exists(self.video_path):
-                raise RuntimeError(f'Видеофайл не найден: {self.video_path}')
-            if not validate_file_exists(self.audio_path):
-                raise RuntimeError(f'Аудиофайл не найден: {self.audio_path}')
+            validate_file_exists(self.video_path)
+            validate_file_exists(self.audio_path)
             logger.info('Валидация файлов успешно завершена')
 
             # Шаг 2: Получение метаданных
@@ -72,8 +90,7 @@ class Synchronizer:
 
             # Шаг 3: Проверка смещения
             logger.info('Проверка смещения...')
-            if not validate_offset(self.offset, video_duration):
-                raise RuntimeError(f'Некорректное смещение: {self.offset}')
+            validate_offset(self.offset, video_duration)
             logger.info('Смещение проверено успешно')
 
             # Шаг 4: Подготовка выходного пути
@@ -102,6 +119,10 @@ class Synchronizer:
                 shell=False
             )
 
+            # Передаем процесс и трекер через callback для внешней обработки прерываний
+            if self._context_callback is not None:
+                self._context_callback(process, tracker)
+
             line_count = 0
             for line in process.stdout:
                 tracker.update(line)
@@ -124,6 +145,11 @@ class Synchronizer:
                 raise RuntimeError(f'FFmpeg завершился с ошибкой: {stderr_output}')
 
             logger.info('Синхронизация успешно завершена')
+            
+            # Передаем output_path через callback
+            if self._output_callback is not None:
+                self._output_callback(output_path)
+            
             return output_path
 
         finally:
