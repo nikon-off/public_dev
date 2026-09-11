@@ -1,0 +1,14 @@
+# Перейти в директорию проекта
+cd av_skleyka
+
+# Запустить все тесты
+pytest
+
+# Запустить с подробным выводом
+pytest -v
+
+# Запустить с измерением покрытия (требуется pytest-cov)
+pytest --cov=utils --cov=core --cov-report=term-missing
+
+# Запустить конкретный файл тестов
+pytest tests/test_validators.py -v

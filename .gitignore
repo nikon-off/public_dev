@@ -6,7 +6,7 @@ __pycache__/
 *.pyd
 
 # Logs
-*.log
+av_skleyka/syncer.log
 
 # Environment
 .env
@@ -20,5 +20,3 @@ Thumbs.db
 SpechToText/ffmpeg.exe
 SpechToText/ffprobe.exe
 av_skleyka/.coverage
-av_skleyka/syncer.log
-av_skleyka/syncer.log
