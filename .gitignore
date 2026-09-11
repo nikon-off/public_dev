@@ -45,3 +45,5 @@ htmlcov/
 .DS_Store
 Thumbs.db
 ```
+SpechToText/ffmpeg.exe
+SpechToText/ffprobe.exe
