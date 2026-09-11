@@ -1,15 +1,8 @@
 ```
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
+# Python distribution artifacts
+av_skleyka/audio_video_syncer.egg-info/
 
 # Logs
 *.log
-
-# Environment
-.env
-.env.local
-.env.*
+syncer.log
 ```
