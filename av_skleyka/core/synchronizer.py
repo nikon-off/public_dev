@@ -1,6 +1,7 @@
 """Модуль оркестрации процесса синхронизации аудио и видео."""
 
 import subprocess
+import re
 from typing import Optional, Callable
 
 from config.settings import MAX_RAM_GB
@@ -75,6 +76,7 @@ class Synchronizer:
                 превышении лимита памяти или ошибке ffmpeg.
         """
         tracker: Optional[ProgressTracker] = None
+        process: Optional[subprocess.Popen] = None
 
         try:
             # Шаг 1: Валидация файлов
@@ -111,10 +113,11 @@ class Synchronizer:
             logger.info('Запуск синхронизации...')
             tracker = ProgressTracker(video_duration)
 
+            # ИСПРАВЛЕНИЕ: Читаем stderr, так как ffmpeg пишет прогресс туда
             process = subprocess.Popen(
                 cmd,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
+                stdout=subprocess.DEVNULL,  # Вывод нам не нужен
+                stderr=subprocess.PIPE,     # Прогресс и ошибки идут сюда
                 text=True,
                 shell=False
             )
@@ -124,8 +127,15 @@ class Synchronizer:
                 self._context_callback(process, tracker)
 
             line_count = 0
-            for line in process.stdout:
-                tracker.update(line)
+            # ИСПРАВЛЕНИЕ: Читаем stderr построчно, чтобы не переполнять буфер
+            for line in process.stderr:
+                # Парсим время из строки вида "time=01:23:45.67"
+                time_match = re.search(r'time=(\d{2}):(\d{2}):(\d{2})\.(\d+)', line)
+                if time_match:
+                    h, m, s, ms = time_match.groups()
+                    current_seconds = int(h) * 3600 + int(m) * 60 + float(f"{s}.{ms}")
+                    tracker.update(current_seconds)
+                
                 line_count += 1
 
                 # Каждые 100 строк проверяем лимит памяти
@@ -140,9 +150,13 @@ class Synchronizer:
 
             # Проверка кода возврата
             if process.returncode != 0:
-                stderr_output = process.stderr.read()
-                logger.error(f'Ошибка ffmpeg (код {process.returncode}): {stderr_output}')
-                raise RuntimeError(f'FFmpeg завершился с ошибкой: {stderr_output}')
+                # Читаем остаток stderr только если процесс упал
+                remaining_error = process.stderr.read()
+                error_msg = f'FFmpeg завершился с кодом {process.returncode}'
+                if remaining_error:
+                    error_msg += f'. Детали: {remaining_error.strip()}'
+                logger.error(error_msg)
+                raise RuntimeError(error_msg)
 
             logger.info('Синхронизация успешно завершена')
             
@@ -156,3 +170,7 @@ class Synchronizer:
             # Гарантированное закрытие прогресс-бара
             if tracker is not None:
                 tracker.close()
+            # Гарантированное освобождение ресурсов процесса
+            if process is not None and process.poll() is None:
+                process.kill()
+                process.wait()
