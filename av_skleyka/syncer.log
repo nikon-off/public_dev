@@ -1,5 +1,27 @@
-2026-09-11 18:29:14,120 - syncer - INFO - logger.py:44 - Логгер успешно инициализирован
-2026-09-11 18:29:14,120 - syncer - DEBUG - logger.py:45 - Консольный хендлер настроен на уровень INFO
-2026-09-11 18:29:14,120 - syncer - DEBUG - logger.py:46 - Файловый хендлер настроен на уровень DEBUG (syncer.log)
-2026-09-11 18:29:14,141 - syncer - ERROR - validators.py:21 - Файл не найден: /nonexistent/file.mp4
-2026-09-11 18:29:14,141 - syncer - ERROR - validators.py:44 - Смещение не может быть отрицательным: -1.0
+2026-09-11 18:38:12,090 - syncer - INFO - logger.py:44 - Логгер успешно инициализирован
+2026-09-11 18:38:12,090 - syncer - DEBUG - logger.py:45 - Консольный хендлер настроен на уровень INFO
+2026-09-11 18:38:12,090 - syncer - DEBUG - logger.py:46 - Файловый хендлер настроен на уровень DEBUG (syncer.log)
+2026-09-11 18:38:12,227 - syncer - DEBUG - media_processor.py:30 - Запуск ffprobe для получения длительности: /path/to/video.mp4
+2026-09-11 18:38:12,227 - syncer - DEBUG - media_processor.py:58 - Длительность файла /path/to/video.mp4: 120.5 сек.
+2026-09-11 18:38:12,229 - syncer - DEBUG - media_processor.py:30 - Запуск ffprobe для получения длительности: /path/to/video.mp4
+2026-09-11 18:38:12,229 - syncer - DEBUG - media_processor.py:58 - Длительность файла /path/to/video.mp4: 120.5 сек.
+2026-09-11 18:38:12,231 - syncer - DEBUG - media_processor.py:30 - Запуск ffprobe для получения длительности: /path/to/nonexistent.mp4
+2026-09-11 18:38:12,231 - syncer - ERROR - media_processor.py:42 - Ошибка ffprobe: File not found
+2026-09-11 18:38:12,231 - syncer - ERROR - media_processor.py:67 - Неожиданная ошибка при получении длительности: Ошибка ffprobe: File not found
+2026-09-11 18:38:12,233 - syncer - DEBUG - media_processor.py:30 - Запуск ffprobe для получения длительности: /path/to/video.mp4
+2026-09-11 18:38:12,234 - syncer - ERROR - media_processor.py:48 - ffprobe вернул пустой вывод
+2026-09-11 18:38:12,234 - syncer - ERROR - media_processor.py:67 - Неожиданная ошибка при получении длительности: ffprobe вернул пустой вывод
+2026-09-11 18:38:12,236 - syncer - DEBUG - media_processor.py:30 - Запуск ffprobe для получения длительности: /path/to/video.mp4
+2026-09-11 18:38:12,236 - syncer - ERROR - media_processor.py:55 - Не удалось распарсить длительность "invalid_duration": could not convert string to float: 'invalid_duration'
+2026-09-11 18:38:12,236 - syncer - ERROR - media_processor.py:67 - Неожиданная ошибка при получении длительности: Не удалось распарсить длительность "invalid_duration": could not convert string to float: 'invalid_duration'
+2026-09-11 18:38:12,237 - syncer - INFO - media_processor.py:105 - Сформирована команда ffmpeg для склейки: видео=/path/to/video.mp4, аудио=/path/to/audio.mp3, смещение=5.0сек
+2026-09-11 18:38:12,237 - syncer - DEBUG - media_processor.py:106 - Команда: C:\ffmpeg\bin\ffmpeg.exe -y -progress pipe:1 -itsoffset 5.0 -i /path/to/video.mp4 -i /path/to/audio.mp3 -map 0:v:0 -map 1:a:0 -c:v copy -c:a copy /path/to/output.mp4
+2026-09-11 18:38:12,238 - syncer - INFO - media_processor.py:105 - Сформирована команда ffmpeg для склейки: видео=/path/to/video.mp4, аудио=/path/to/audio.mp3, смещение=5.0сек
+2026-09-11 18:38:12,238 - syncer - DEBUG - media_processor.py:106 - Команда: C:\ffmpeg\bin\ffmpeg.exe -y -progress pipe:1 -itsoffset 5.0 -i /path/to/video.mp4 -i /path/to/audio.mp3 -map 0:v:0 -map 1:a:0 -c:v copy -c:a copy /path/to/output.mp4
+2026-09-11 18:38:12,239 - syncer - INFO - media_processor.py:105 - Сформирована команда ffmpeg для склейки: видео=/path/to/video.mp4, аудио=/path/to/audio.mp3, смещение=3.5сек
+2026-09-11 18:38:12,239 - syncer - DEBUG - media_processor.py:106 - Команда: C:\ffmpeg\bin\ffmpeg.exe -y -progress pipe:1 -itsoffset 3.5 -i /path/to/video.mp4 -i /path/to/audio.mp3 -map 0:v:0 -map 1:a:0 -c:v copy -c:a copy /path/to/output.mp4
+2026-09-11 18:38:12,241 - syncer - INFO - media_processor.py:105 - Сформирована команда ffmpeg для склейки: видео=/path/to/video.mp4, аудио=/path/to/audio.mp3, смещение=5.0сек
+2026-09-11 18:38:12,241 - syncer - DEBUG - media_processor.py:106 - Команда: C:\ffmpeg\bin\ffmpeg.exe -y -progress pipe:1 -itsoffset 5.0 -i /path/to/video.mp4 -i /path/to/audio.mp3 -map 0:v:0 -map 1:a:0 -c:v copy -c:a copy /path/to/output.mp4
+2026-09-11 18:38:12,266 - syncer - ERROR - validators.py:48 - Смещение (120.0 сек) не может быть больше или равно длительности видео (120.0 сек)
+2026-09-11 18:38:12,267 - syncer - ERROR - validators.py:48 - Смещение (150.0 сек) не может быть больше или равно длительности видео (120.0 сек)
+2026-09-11 18:38:12,269 - syncer - ERROR - validators.py:44 - Смещение не может быть отрицательным: -5.0
