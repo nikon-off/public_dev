@@ -22,3 +22,9 @@ SpechToText/ffprobe.exe
 av_skleyka/.coverage
 av_skleyka/syncer.log
 av_skleyka/syncer.log
+av_skleyka/audio_video_syncer.egg-info/dependency_links.txt
+av_skleyka/audio_video_syncer.egg-info/entry_points.txt
+av_skleyka/audio_video_syncer.egg-info/PKG-INFO
+av_skleyka/audio_video_syncer.egg-info/requires.txt
+av_skleyka/audio_video_syncer.egg-info/SOURCES.txt
+av_skleyka/audio_video_syncer.egg-info/top_level.txt
