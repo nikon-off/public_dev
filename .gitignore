@@ -1,1 +1,1 @@
-Nothing needs to be added to .gitignore since only a Python source file (`av_skleyka/core/progress_tracker.py`) was added, which is regular source code that should be tracked in version control.
+Nothing to output - the file changes only include a Python source file modification with no build artifacts, dependencies, or temporary files that need to be ignored.
