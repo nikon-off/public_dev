@@ -48,8 +48,10 @@ class ProgressTracker:
             if match:
                 ms_value = int(match.group(1))
                 current_seconds = ms_value / 1000.0
-                self.pbar.n = current_seconds
-                self.pbar.refresh()
+                current_n = self.pbar.n or 0
+                delta = current_seconds - current_n
+                if delta > 0:
+                    self.pbar.update(delta)
         except (ValueError, AttributeError) as e:
             # Игнорируем ошибки парсинга, чтобы не останавливать процесс
             logger.debug(f'Ошибка парсинга строки прогресса: {e}')
