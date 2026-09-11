@@ -1,47 +1,15 @@
 ```
-# Logs and temp files
-*.log
-av_skleyka/syncer.log
-
-# Dependencies
-.venv/
-venv/
-node_modules/
+# Python
 __pycache__/
-*.egg-info/
-
-# Build artifacts
-dist/
-build/
-target/
-
-# Environment files
-.env
-.env.local
-*.env.*
-
-# Editors
-.vscode/
-.idea/
-
-# Python specific
 *.pyc
 *.pyo
 *.pyd
-.Python
-*.so
 
-# Coverage reports
-coverage/
-htmlcov/
-.coverage
+# Logs
+*.log
 
-# IDE and editor files
-*.swp
-*.swo
-*.tmp
-
-# OS generated files
-.DS_Store
-Thumbs.db
+# Environment
+.env
+.env.local
+.env.*
 ```
