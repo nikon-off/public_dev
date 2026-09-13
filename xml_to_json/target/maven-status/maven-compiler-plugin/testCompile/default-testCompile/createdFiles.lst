@@ -1,1 +1,2 @@
 com\example\converter\parser\DcsFilterParserTest.class
+com\example\converter\transformer\CanonicalConditionBuilderTest.class

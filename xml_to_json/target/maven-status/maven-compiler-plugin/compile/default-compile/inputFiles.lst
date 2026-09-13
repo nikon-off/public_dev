@@ -5,3 +5,4 @@ c:\dev\public_dev\xml_to_json\src\main\java\com\example\converter\dto\InputContr
 c:\dev\public_dev\xml_to_json\src\main\java\com\example\converter\dto\RuleDto.java
 c:\dev\public_dev\xml_to_json\src\main\java\com\example\converter\Main.java
 c:\dev\public_dev\xml_to_json\src\main\java\com\example\converter\parser\DcsFilterParser.java
+c:\dev\public_dev\xml_to_json\src\main\java\com\example\converter\transformer\CanonicalConditionBuilder.java

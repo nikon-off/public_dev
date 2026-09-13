@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.example.converter.parser.DcsFilterParserTest" time="0.307" tests="8" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.191" tests="36" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -59,12 +59,52 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="returnsEmptyConditionWhenFilterSectionMissing" classname="com.example.converter.parser.DcsFilterParserTest" time="0.062"/>
-  <testcase name="throwsIllegalArgumentExceptionForMalformedXml" classname="com.example.converter.parser.DcsFilterParserTest" time="0.015"/>
-  <testcase name="parsesAndGroupWithEqual" classname="com.example.converter.parser.DcsFilterParserTest" time="0.005"/>
-  <testcase name="returnsEmptyConditionForBlankAndNullInput" classname="com.example.converter.parser.DcsFilterParserTest" time="0.001"/>
-  <testcase name="flattensNestedGroupsIntoFlatRuleList" classname="com.example.converter.parser.DcsFilterParserTest" time="0.004"/>
-  <testcase name="skipsUnknownTagsAndUnknownTypesInsideFilter" classname="com.example.converter.parser.DcsFilterParserTest" time="0.002"/>
-  <testcase name="normalizesNotEqualAndNotInList" classname="com.example.converter.parser.DcsFilterParserTest" time="0.001"/>
-  <testcase name="parsesOrGroupWithInListFromDocumentationExample" classname="com.example.converter.parser.DcsFilterParserTest" time="0.002"/>
+  <testcase name="replacesWhitespaceWithUnderscoresInField" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.003"/>
+  <testcase name="normalizesUppercaseHyphenatedUuidToLowercase" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.001"/>
+  <testcase name="explicitFieldMappingWinsOverGenericNormalization" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.001"/>
+  <testcase name="splitsAcronymRunBeforeFollowingWord" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.001"/>
+  <testcase name="insertsHyphensIntoUuidWithoutSeparators" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.008"/>
+  <testcase name="normalizesEveryElementInsideInListValues" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.001"/>
+  <testcase name="normalizesBooleanValuesToLowercaseStrings" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.001"/>
+  <testcase name="returnsEmptyDtoForNullInput" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.021">
+    <system-err><![CDATA[сент. 14, 2026 1:39:43 AM com.example.converter.transformer.CanonicalConditionBuilder build
+WARNING: build(null): входное условие отсутствует, возвращается пустой DTO
+]]></system-err>
+  </testcase>
+  <testcase name="skipsRuleWithBlankField" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.003">
+    <system-err><![CDATA[сент. 14, 2026 1:39:43 AM com.example.converter.transformer.CanonicalConditionBuilder normalizeRule
+WARNING: Правило с пустым полем пропущено (raw field: '   ')
+]]></system-err>
+  </testcase>
+  <testcase name="normalizesCyrillicFieldToLowercaseSnakeCase" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.001"/>
+  <testcase name="keepsSingleValueAsOneElementListForIn" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.001"/>
+  <testcase name="doesNotMutateInputDto" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.001"/>
+  <testcase name="lowercasesMixedCaseUuidWithoutSeparators" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.002"/>
+  <testcase name="preservesRuleOrderAndTopLevelLogic" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.001"/>
+  <testcase name="normalizesSupportedOperatorAliases(String, String)[1]" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.009"/>
+  <testcase name="normalizesSupportedOperatorAliases(String, String)[2]" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.001"/>
+  <testcase name="normalizesSupportedOperatorAliases(String, String)[3]" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.0"/>
+  <testcase name="normalizesSupportedOperatorAliases(String, String)[4]" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.001"/>
+  <testcase name="normalizesSupportedOperatorAliases(String, String)[5]" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.002"/>
+  <testcase name="normalizesSupportedOperatorAliases(String, String)[6]" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.0"/>
+  <testcase name="normalizesSupportedOperatorAliases(String, String)[7]" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.0"/>
+  <testcase name="normalizesSupportedOperatorAliases(String, String)[8]" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.001"/>
+  <testcase name="normalizesSupportedOperatorAliases(String, String)[9]" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.0"/>
+  <testcase name="normalizesSupportedOperatorAliases(String, String)[10]" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.001"/>
+  <testcase name="normalizesSupportedOperatorAliases(String, String)[11]" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.001"/>
+  <testcase name="normalizesSupportedOperatorAliases(String, String)[12]" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.005"/>
+  <testcase name="normalizesSupportedOperatorAliases(String, String)[13]" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.001"/>
+  <testcase name="skipsRuleWithUnknownOperator" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.002">
+    <system-err><![CDATA[сент. 14, 2026 1:39:44 AM com.example.converter.transformer.CanonicalConditionBuilder normalizeRule
+WARNING: Неизвестный оператор 'Contains' для поля 'field' — правило пропущено
+]]></system-err>
+  </testcase>
+  <testcase name="keepsAlreadyNormalizedSnakeCaseField" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.001"/>
+  <testcase name="keepsNullLogicWhenInputHasNoLogic" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.0"/>
+  <testcase name="keepsAlreadyCanonicalUuidUnchanged" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.0"/>
+  <testcase name="normalizesLogicAliases(String, String)[1]" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.001"/>
+  <testcase name="normalizesLogicAliases(String, String)[2]" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.001"/>
+  <testcase name="normalizesLogicAliases(String, String)[3]" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.001"/>
+  <testcase name="normalizesLogicAliases(String, String)[4]" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.0"/>
+  <testcase name="normalizesLatinCamelCaseFieldToSnakeCase" classname="com.example.converter.transformer.CanonicalConditionBuilderTest" time="0.0"/>
 </testsuite>
