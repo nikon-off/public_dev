@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- ====================================================================
+         XML → JSON конвертер (настройки 1С:Предприятие DCS, xmlFilter)
+         ==================================================================== -->
+    <groupId>com.example</groupId>
+    <artifactId>xml-to-json-converter</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>xml-to-json-converter</name>
+    <description>Конвертер XML-строк (Settings 1С) в JSON на базе Jackson</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Java 21: release управляет и source, и target, и API (Java 9+) -->
+        <maven.compiler.release>21</maven.compiler.release>
+
+        <!--
+          Версии Jackson проверены через Context7 MCP (2026-09-13).
+          Линия 2.x (com.fasterxml.jackson.*) — стабильная, индустриальный стандарт,
+          совместима с экосистемой Spring Boot 3.x. Актуальная версия: 2.21.2.
+          Альтернатива: Jackson 3.x (tools.jackson.core) — новый major с другим namespace.
+        -->
+        <jackson.version>2.21.2</jackson.version>
+    </properties>
+
+    <!-- jackson-bom: единое управление версиями всех артефактов Jackson
+         (databind, core, annotations, dataformat-xml выходят синхронно).
+         Рекомендовано официальной документацией FasterXML. -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${jackson.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <!-- Работа с JSON: сериализация/десериализация объектов и дерева JsonNode.
+             Транзитивно тянет jackson-core и jackson-annotations. -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+        <!-- Парсинг XML из строки: XmlMapper.readTree(String) для xmlFilter из 1С.
+             Транзитивно тянет jackson-module-jakarta-xmlbind-annotations. -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- maven-surefire-plugin не требуется явно: стандартная привязка
+                 из super-POM выполнит тесты из src/test/java (если появятся). -->
+        </plugins>
+    </build>
+</project>
