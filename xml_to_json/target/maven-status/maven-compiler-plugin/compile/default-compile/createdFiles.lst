@@ -1,1 +1,6 @@
 com\example\converter\Main.class
+com\example\converter\dto\GroupDto.class
+com\example\converter\dto\RuleDto.class
+com\example\converter\dto\CanonicalConditionDto.class
+com\example\converter\dto\ConditionDto.class
+com\example\converter\dto\InputContractDto.class
