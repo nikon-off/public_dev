@@ -1,8 +1,12 @@
 com\example\converter\Main.class
 com\example\converter\parser\DcsFilterParser.class
+com\example\converter\dto\output\OutputContractDto.class
 com\example\converter\dto\CanonicalConditionDto.class
 com\example\converter\dto\ConditionDto.class
+com\example\converter\dto\output\OutputGroupDto.class
 com\example\converter\transformer\CanonicalConditionBuilder.class
 com\example\converter\dto\GroupDto.class
+com\example\converter\dto\output\OutputConditionDto.class
 com\example\converter\dto\RuleDto.class
+com\example\converter\Main$CliException.class
 com\example\converter\dto\InputContractDto.class

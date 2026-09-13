@@ -1,0 +1,218 @@
+{
+  "contractId" : "b37f1b0d-5815-11f1-99ad-0050569df0b4",
+  "contractName" : "Договор возмездного оказания услуг 00977 от 25.05.2026 11:42:49",
+  "groups" : [ {
+    "groupId" : "eb24ba97-543e-11f1-99ad-0050569df0b4",
+    "groupName" : "Переход из других страховых компаний, кроме г. Севастополь и Симферополь (Симферопольский р-н)",
+    "conditions" : [ {
+      "conditionId" : "eb24b6c3-543e-11f1-99ad-0050569df0b4",
+      "conditionName" : "Регистрация Собственника районы Крыма ",
+      "canonical" : {
+        "logic" : "OR",
+        "rules" : [ ]
+      }
+    }, {
+      "conditionId" : "167cc6bd-dd79-11ef-998b-86c6308b17d6",
+      "conditionName" : "ОСАГО Перестрахование",
+      "canonical" : {
+        "logic" : null,
+        "rules" : [ ]
+      }
+    }, {
+      "conditionId" : "a75254ce-9cff-11f0-99ab-0050569df0b4",
+      "conditionName" : "ОСАГО РФ все",
+      "canonical" : {
+        "logic" : null,
+        "rules" : [ ]
+      }
+    }, {
+      "conditionId" : "4b7b094f-4ed4-11f1-99ad-0050569df0b4",
+      "conditionName" : "Категория договора ОСАГО - Переход из другой страховой",
+      "canonical" : {
+        "logic" : "OR",
+        "rules" : [ ]
+      }
+    } ]
+  }, {
+    "groupId" : "ce092405-9a40-11f1-99af-0050569df0b4",
+    "groupName" : "ОСАГО РФ, фл, без переходов, 13%",
+    "conditions" : [ {
+      "conditionId" : "ce091458-9a40-11f1-99af-0050569df0b4",
+      "conditionName" : "ОСАГО Города Регион:  Херсонская обл Донецкая обл Луганская обл Запорожская обл",
+      "canonical" : {
+        "logic" : "OR",
+        "rules" : [ ]
+      }
+    }, {
+      "conditionId" : "a75254ce-9cff-11f0-99ab-0050569df0b4",
+      "conditionName" : "ОСАГО РФ все",
+      "canonical" : {
+        "logic" : null,
+        "rules" : [ ]
+      }
+    }, {
+      "conditionId" : "167cc6bd-dd79-11ef-998b-86c6308b17d6",
+      "conditionName" : "ОСАГО Перестрахование",
+      "canonical" : {
+        "logic" : null,
+        "rules" : [ ]
+      }
+    }, {
+      "conditionId" : "edb90698-a90d-11f0-99ab-0050569df0b4",
+      "conditionName" : "ОСАГО Страхователь ФЛ",
+      "canonical" : {
+        "logic" : null,
+        "rules" : [ ]
+      }
+    }, {
+      "conditionId" : "a646923f-a1f5-11f1-99b0-0050569df0b4",
+      "conditionName" : "Категория договора ОСАГО - Кроме Переход из другой страховой",
+      "canonical" : {
+        "logic" : "OR",
+        "rules" : [ ]
+      }
+    } ]
+  }, {
+    "groupId" : "7a794aee-9a3d-11f1-99af-0050569df0b4",
+    "groupName" : "ОСАГО РФ, фл, без переходов, 9%",
+    "conditions" : [ {
+      "conditionId" : "747dfba2-9a3d-11f1-99af-0050569df0b4",
+      "conditionName" : "ОСАГО Города: г.Керчь г.Саки г.Судак г.Ялта г.Евпатория г.Феодосия г.Алушта Армянск г Районы: р-он Б",
+      "canonical" : {
+        "logic" : "OR",
+        "rules" : [ ]
+      }
+    }, {
+      "conditionId" : "a75254ce-9cff-11f0-99ab-0050569df0b4",
+      "conditionName" : "ОСАГО РФ все",
+      "canonical" : {
+        "logic" : null,
+        "rules" : [ ]
+      }
+    }, {
+      "conditionId" : "167cc6bd-dd79-11ef-998b-86c6308b17d6",
+      "conditionName" : "ОСАГО Перестрахование",
+      "canonical" : {
+        "logic" : null,
+        "rules" : [ ]
+      }
+    }, {
+      "conditionId" : "edb90698-a90d-11f0-99ab-0050569df0b4",
+      "conditionName" : "ОСАГО Страхователь ФЛ",
+      "canonical" : {
+        "logic" : null,
+        "rules" : [ ]
+      }
+    }, {
+      "conditionId" : "a646923f-a1f5-11f1-99b0-0050569df0b4",
+      "conditionName" : "Категория договора ОСАГО - Кроме Переход из другой страховой",
+      "canonical" : {
+        "logic" : "OR",
+        "rules" : [ ]
+      }
+    } ]
+  }, {
+    "groupId" : "d1fcacda-9a3f-11f1-99af-0050569df0b4",
+    "groupName" : "ОСАГО РФ, фл, без переходов, 10%",
+    "conditions" : [ {
+      "conditionId" : "48138bc7-9a3f-11f1-99af-0050569df0b4",
+      "conditionName" : "ОСАГО Города: Красноперекопск г Джанкой г Районы: Нижнегорский р-н Первомайский р-н Советский р-н Дж",
+      "canonical" : {
+        "logic" : "OR",
+        "rules" : [ ]
+      }
+    }, {
+      "conditionId" : "a75254ce-9cff-11f0-99ab-0050569df0b4",
+      "conditionName" : "ОСАГО РФ все",
+      "canonical" : {
+        "logic" : null,
+        "rules" : [ ]
+      }
+    }, {
+      "conditionId" : "167cc6bd-dd79-11ef-998b-86c6308b17d6",
+      "conditionName" : "ОСАГО Перестрахование",
+      "canonical" : {
+        "logic" : null,
+        "rules" : [ ]
+      }
+    }, {
+      "conditionId" : "edb90698-a90d-11f0-99ab-0050569df0b4",
+      "conditionName" : "ОСАГО Страхователь ФЛ",
+      "canonical" : {
+        "logic" : null,
+        "rules" : [ ]
+      }
+    }, {
+      "conditionId" : "a646923f-a1f5-11f1-99b0-0050569df0b4",
+      "conditionName" : "Категория договора ОСАГО - Кроме Переход из другой страховой",
+      "canonical" : {
+        "logic" : "OR",
+        "rules" : [ ]
+      }
+    } ]
+  }, {
+    "groupId" : "60bf8fba-dd7e-11ef-998b-86c6308b17d6",
+    "groupName" : "ОСАГО (Ин)_для Всех",
+    "conditions" : [ {
+      "conditionId" : "5ab83d7a-dd7e-11ef-998b-86c6308b17d6",
+      "conditionName" : "ОСАГО Иностр. для Всех",
+      "canonical" : {
+        "logic" : null,
+        "rules" : [ ]
+      }
+    }, {
+      "conditionId" : "167cc6bd-dd79-11ef-998b-86c6308b17d6",
+      "conditionName" : "ОСАГО Перестрахование",
+      "canonical" : {
+        "logic" : null,
+        "rules" : [ ]
+      }
+    }, {
+      "conditionId" : "668a3b90-eadd-11ef-998b-86c6308b17d6",
+      "conditionName" : "КТ 30_ТЧ",
+      "canonical" : {
+        "logic" : null,
+        "rules" : [ ]
+      }
+    }, {
+      "conditionId" : "5e01533b-84b3-11f0-99ab-0050569df0b4",
+      "conditionName" : "ОСАГО_страхователь/собственник НЕ Россия",
+      "canonical" : {
+        "logic" : "OR",
+        "rules" : [ ]
+      }
+    } ]
+  }, {
+    "groupId" : "6225a5d6-64f4-11f1-99ad-0050569df0b4",
+    "groupName" : "ОСАГО РФ, переход из других страховых компаний, г. Севастополь, г. Симферополь, Симферопольский р-н",
+    "conditions" : [ {
+      "conditionId" : "55659e97-64f4-11f1-99ad-0050569df0b4",
+      "conditionName" : "Регистрация Собственника г. Севастополь, г. Симферополь, Симферопольский р-н",
+      "canonical" : {
+        "logic" : "OR",
+        "rules" : [ ]
+      }
+    }, {
+      "conditionId" : "167cc6bd-dd79-11ef-998b-86c6308b17d6",
+      "conditionName" : "ОСАГО Перестрахование",
+      "canonical" : {
+        "logic" : null,
+        "rules" : [ ]
+      }
+    }, {
+      "conditionId" : "f0895d11-64f3-11f1-99ad-0050569df0b4",
+      "conditionName" : "ОСАГО РФ Страхователь ФЛ",
+      "canonical" : {
+        "logic" : null,
+        "rules" : [ ]
+      }
+    }, {
+      "conditionId" : "4b7b094f-4ed4-11f1-99ad-0050569df0b4",
+      "conditionName" : "Категория договора ОСАГО - Переход из другой страховой",
+      "canonical" : {
+        "logic" : "OR",
+        "rules" : [ ]
+      }
+    } ]
+  } ]
+}

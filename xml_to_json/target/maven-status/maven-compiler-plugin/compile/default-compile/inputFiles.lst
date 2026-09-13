@@ -2,6 +2,9 @@ c:\dev\public_dev\xml_to_json\src\main\java\com\example\converter\dto\CanonicalC
 c:\dev\public_dev\xml_to_json\src\main\java\com\example\converter\dto\ConditionDto.java
 c:\dev\public_dev\xml_to_json\src\main\java\com\example\converter\dto\GroupDto.java
 c:\dev\public_dev\xml_to_json\src\main\java\com\example\converter\dto\InputContractDto.java
+c:\dev\public_dev\xml_to_json\src\main\java\com\example\converter\dto\output\OutputConditionDto.java
+c:\dev\public_dev\xml_to_json\src\main\java\com\example\converter\dto\output\OutputContractDto.java
+c:\dev\public_dev\xml_to_json\src\main\java\com\example\converter\dto\output\OutputGroupDto.java
 c:\dev\public_dev\xml_to_json\src\main\java\com\example\converter\dto\RuleDto.java
 c:\dev\public_dev\xml_to_json\src\main\java\com\example\converter\Main.java
 c:\dev\public_dev\xml_to_json\src\main\java\com\example\converter\parser\DcsFilterParser.java
