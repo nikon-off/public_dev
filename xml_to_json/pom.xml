@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <!-- ====================================================================
@@ -27,6 +27,14 @@
           Альтернатива: Jackson 3.x (tools.jackson.core) — новый major с другим namespace.
         -->
         <jackson.version>2.21.2</jackson.version>
+
+        <!--
+          JUnit 5 (Jupiter): версия проверена через Context7 MCP (2026-09-13),
+          стабильная линия 5.13.x. Surefire 3.5.x умеет запускать JUnit Platform
+          из коробки (без vintage-моста).
+        -->
+        <junit.jupiter.version>5.13.4</junit.jupiter.version>
+        <maven-surefire.version>3.5.2</maven-surefire.version>
     </properties>
 
     <!-- jackson-bom: единое управление версиями всех артефактов Jackson
@@ -58,12 +66,26 @@
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
         </dependency>
+
+        <!-- Тестирование: JUnit 5 (Jupiter API + Engine + Parameterized).
+             Агрегатор junit-jupiter достаточно указать одним артефактом. -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!-- maven-surefire-plugin не требуется явно: стандартная привязка
-                 из super-POM выполнит тесты из src/test/java (если появятся). -->
+            <!-- Явная версия surefire: гарантирует поддержку JUnit Platform
+                 независимо от Maven-дистрибутива. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire.version}</version>
+            </plugin>
         </plugins>
     </build>
 </project>
