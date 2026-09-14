@@ -107,7 +107,15 @@ public class Main {
     // Трансформация входных DTO в выходные
     // ------------------------------------------------------------------
 
-    private static OutputContractDto transform(InputContractDto contract) {
+    /**
+     * Преобразует входной контракт в выходной: каждое условие проходит конвейер
+     * парсер → билдер. Метод пакетной видимости: используется самим CLI и
+     * интеграционным тестом {@code XmlToJsonPipelineIntegrationTest}.
+     *
+     * @param contract входной контракт с сырыми {@code xmlFilter}
+     * @return выходной контракт с каноническими условиями
+     */
+    static OutputContractDto transform(InputContractDto contract) {
         List<OutputGroupDto> groups = new ArrayList<>();
         for (GroupDto group : contract.getGroups()) {
             groups.add(transformGroup(group));
@@ -115,7 +123,7 @@ public class Main {
         return new OutputContractDto(contract.getContractId(), contract.getContractName(), groups);
     }
 
-    private static OutputGroupDto transformGroup(GroupDto group) {
+    static OutputGroupDto transformGroup(GroupDto group) {
         List<OutputConditionDto> conditions = new ArrayList<>();
         for (ConditionDto condition : group.getConditions()) {
             conditions.add(transformCondition(condition));
@@ -127,7 +135,7 @@ public class Main {
      * Конвейер одного условия: парсер XML → нормализация в каноническую модель.
      * Пустой/отсутствующий {@code xmlFilter} даёт пустую модель (не ошибку).
      */
-    private static OutputConditionDto transformCondition(ConditionDto condition) {
+    static OutputConditionDto transformCondition(ConditionDto condition) {
         CanonicalConditionDto parsed = PARSER.parse(condition.getXmlFilter());
         CanonicalConditionDto canonical = BUILDER.build(parsed);
         return new OutputConditionDto(condition.getConditionId(), condition.getConditionName(), canonical);

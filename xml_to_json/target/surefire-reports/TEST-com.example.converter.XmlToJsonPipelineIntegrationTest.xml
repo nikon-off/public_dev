@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.example.converter.parser.DcsFilterParserTest" time="0.776" tests="9" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.example.converter.XmlToJsonPipelineIntegrationTest" time="0.569" tests="6" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -59,13 +59,10 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="returnsEmptyConditionWhenFilterSectionMissing" classname="com.example.converter.parser.DcsFilterParserTest" time="0.164"/>
-  <testcase name="throwsIllegalArgumentExceptionForMalformedXml" classname="com.example.converter.parser.DcsFilterParserTest" time="0.027"/>
-  <testcase name="parsesAndGroupWithEqual" classname="com.example.converter.parser.DcsFilterParserTest" time="0.005"/>
-  <testcase name="returnsEmptyConditionForEmptyFilterSection" classname="com.example.converter.parser.DcsFilterParserTest" time="0.004"/>
-  <testcase name="returnsEmptyConditionForBlankAndNullInput" classname="com.example.converter.parser.DcsFilterParserTest" time="0.001"/>
-  <testcase name="flattensNestedGroupsIntoFlatRuleList" classname="com.example.converter.parser.DcsFilterParserTest" time="0.005"/>
-  <testcase name="skipsUnknownTagsAndUnknownTypesInsideFilter" classname="com.example.converter.parser.DcsFilterParserTest" time="0.005"/>
-  <testcase name="normalizesNotEqualAndNotInList" classname="com.example.converter.parser.DcsFilterParserTest" time="0.002"/>
-  <testcase name="parsesOrGroupWithInListFromDocumentationExample" classname="com.example.converter.parser.DcsFilterParserTest" time="0.003"/>
+  <testcase name="producesOrLogicWithEmptyRulesForGroupWithoutComparisons" classname="com.example.converter.XmlToJsonPipelineIntegrationTest" time="0.104"/>
+  <testcase name="preservesContractHeaderAndGroupCount" classname="com.example.converter.XmlToJsonPipelineIntegrationTest" time="0.005"/>
+  <testcase name="producesEmptyCanonicalForConditionWithoutFilterSection" classname="com.example.converter.XmlToJsonPipelineIntegrationTest" time="0.001"/>
+  <testcase name="parsesRealXmlFilterFromFirstConditionOfContract" classname="com.example.converter.XmlToJsonPipelineIntegrationTest" time="0.018"/>
+  <testcase name="everyConditionMatchesExpectedCanonicalSchema" classname="com.example.converter.XmlToJsonPipelineIntegrationTest" time="0.011"/>
+  <testcase name="preservesEveryGroupIdAndNameInOrder" classname="com.example.converter.XmlToJsonPipelineIntegrationTest" time="0.001"/>
 </testsuite>

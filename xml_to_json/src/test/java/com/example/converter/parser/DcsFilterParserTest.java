@@ -207,6 +207,21 @@ class DcsFilterParserTest {
     }
 
     @Test
+    void returnsEmptyConditionForEmptyFilterSection() {
+        String xml = """
+                <Settings %s>
+                    <filter>
+                    </filter>
+                </Settings>
+                """.formatted(NAMESPACES);
+
+        CanonicalConditionDto result = parser.parse(xml);
+
+        assertNull(result.getLogic(), "Пустой <filter></filter> не должен давать логику");
+        assertTrue(result.getRules().isEmpty(), "Пустой <filter></filter> должен давать пустой список правил");
+    }
+
+    @Test
     void returnsEmptyConditionForBlankAndNullInput() {
         assertTrue(parser.parse(null).getRules().isEmpty());
         assertTrue(parser.parse("   \n\t ").getRules().isEmpty());

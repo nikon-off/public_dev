@@ -1,2 +1,3 @@
 c:\dev\public_dev\xml_to_json\src\test\java\com\example\converter\parser\DcsFilterParserTest.java
 c:\dev\public_dev\xml_to_json\src\test\java\com\example\converter\transformer\CanonicalConditionBuilderTest.java
+c:\dev\public_dev\xml_to_json\src\test\java\com\example\converter\XmlToJsonPipelineIntegrationTest.java

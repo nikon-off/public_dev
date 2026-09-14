@@ -35,6 +35,21 @@
         -->
         <junit.jupiter.version>5.13.4</junit.jupiter.version>
         <maven-surefire.version>3.5.2</maven-surefire.version>
+
+        <!--
+          AssertJ Core: последняя стабильная версия линии 3.x проверена через
+          Maven Central metadata (2026-09-13): 3.27.7. JSON-ассерты
+          (assertThatJson / inPath) входят в состав assertj-core, отдельный
+          артефакт не нужен. 4.0.0-M1 — milestone, не используется.
+        -->
+        <assertj.version>3.27.7</assertj.version>
+
+        <!--
+          maven-assembly-plugin: конфигурация (descriptorRef jar-with-dependencies,
+          archive/manifest/mainClass, execution на фазе package) проверена через
+          Context7 MCP по официальной документации Apache Maven (2026-09-13).
+        -->
+        <maven-assembly.version>3.8.0</maven-assembly.version>
     </properties>
 
     <!-- jackson-bom: единое управление версиями всех артефактов Jackson
@@ -75,6 +90,15 @@
             <version>${junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- AssertJ: fluent-ассерты, включая JSON-ассерты (assertThatJson/inPath)
+             для интеграционного теста структуры выходного JSON. -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -85,6 +109,34 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire.version}</version>
+            </plugin>
+
+            <!-- Сборка исполняемого fat jar (uber jar) со всеми зависимостями.
+                 Итоговый артефакт: target/xml-to-json-converter-1.0.0-SNAPSHOT-jar-with-dependencies.jar
+                 Запуск: java -jar <jar> <input-file.json> -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>${maven-assembly.version}</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.example.converter.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
