@@ -24,13 +24,24 @@ import java.util.logging.Logger;
  * </ul>
  *
  * <h2>Нормализация полей</h2>
+ * <p>Поведение настраивается через {@link TransformerConfig} флагом
+ * {@code preserveOriginalFieldNames} (по умолчанию {@code false}):</p>
  * <ol>
- *   <li>Явный маппинг 1С-имён (инжектируемый {@code Map<String, String>})
- *       имеет приоритет — точка расширения для будущей таблицы соответствий.</li>
- *   <li>Общая нормализация: {@code camelCase}/{@code PascalCase} → snake_case
- *       (включая кириллицу и аббревиатуры: {@code FIASCode} → {@code fias_code},
- *       {@code ГородФИАС} → {@code город_фиас}); пробелы и разделители → {@code _};
- *       всё приводится к нижнему регистру.</li>
+ *   <li><b>Строгий режим</b> ({@code preserveOriginalFieldNames=true}):
+ *       значение {@code leftValuePath} из XML передаётся в канонический JSON
+ *       без изменений — сохраняются регистр и точки
+ *       ({@code ОбъектСтрахования.СтранаРегистрации} остаётся как есть,
+ *       точка НЕ заменяется подчёркиванием). Требуется для корректной работы
+ *       Matching Engine с точечными путями к реквизитам.</li>
+ *   <li><b>Обычный режим</b> ({@code false}, по умолчанию):
+ *       <ol>
+ *         <li>Явный маппинг 1С-имён (инжектируемый {@code Map<String, String>})
+ *             имеет приоритет — точка расширения для будущей таблицы соответствий.</li>
+ *         <li>Общая нормализация: {@code camelCase}/{@code PascalCase} → snake_case
+ *             (включая кириллицу и аббревиатуры: {@code FIASCode} → {@code fias_code},
+ *             {@code ГородФИАС} → {@code город_фиас}); пробелы и разделители → {@code _};
+ *             всё приводится к нижнему регистру.</li>
+ *       </ol></li>
  * </ol>
  *
  * <h2>Нормализация операторов</h2>
@@ -101,22 +112,33 @@ public class CanonicalConditionBuilder {
             "AND", LOGIC_AND, "ANDGROUP", LOGIC_AND
     );
 
-    /** Явный маппинг 1С-имён полей → канонические имена (расширяемая точка). */
-    private final Map<String, String> fieldMapping;
+    /** Конфигурация трансформатора: строгий режим имён полей + явный маппинг. */
+    private final TransformerConfig config;
 
-    /** Конструктор без маппинга: только общая нормализация. */
+    /** Конструктор без маппинга: только общая нормализация, строгий режим выключен. */
     public CanonicalConditionBuilder() {
-        this(Map.of());
+        this(new TransformerConfig());
     }
 
     /**
-     * Конструктор с инжекцией явного маппинга полей.
+     * Конструктор с инжекцией явного маппинга полей (строгий режим выключен).
      *
      * @param fieldMapping соответствия «сырое имя 1С» → «каноническое имя»;
      *                     {@code null} трактуется как пустой маппинг
      */
     public CanonicalConditionBuilder(Map<String, String> fieldMapping) {
-        this.fieldMapping = fieldMapping != null ? Map.copyOf(fieldMapping) : Map.of();
+        this(new TransformerConfig(false, fieldMapping));
+    }
+
+    /**
+     * Конструктор с полной конфигурацией трансформатора.
+     *
+     * @param config конфигурация (флаг {@code preserveOriginalFieldNames},
+     *               маппинг полей); {@code null} трактуется как конфигурация
+     *               по умолчанию
+     */
+    public CanonicalConditionBuilder(TransformerConfig config) {
+        this.config = config != null ? config : new TransformerConfig();
     }
 
     /**
@@ -170,9 +192,15 @@ public class CanonicalConditionBuilder {
     // ------------------------------------------------------------------
 
     /**
-     * Явный маппинг (при наличии) → общая snake_case-нормализация.
+     * Определяет итоговое имя поля:
+     * <ol>
+     *   <li>Строгий режим ({@code preserveOriginalFieldNames=true}) — исходное
+     *       имя поля из XML передаётся без изменений: регистр и точки
+     *       сохраняются, точка НЕ заменяется подчёркиванием.</li>
+     *   <li>Иначе: явный маппинг (при наличии) → общая snake_case-нормализация.</li>
+     * </ol>
      *
-     * @return нормализованное имя поля или {@code null} для пустого имени
+     * @return итоговое имя поля или {@code null} для пустого имени
      */
     private String normalizeField(String raw) {
         if (raw == null) {
@@ -182,7 +210,10 @@ public class CanonicalConditionBuilder {
         if (trimmed.isEmpty()) {
             return null;
         }
-        String mapped = fieldMapping.get(trimmed);
+        if (config.isPreserveOriginalFieldNames()) {
+            return trimmed;
+        }
+        String mapped = config.getFieldMapping().get(trimmed);
         if (mapped != null) {
             return mapped;
         }

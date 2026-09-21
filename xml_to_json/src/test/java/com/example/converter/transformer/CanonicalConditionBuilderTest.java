@@ -15,8 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Юнит-тесты трансформатора {@link CanonicalConditionBuilder}: нормализация
- * полей (snake_case), операторов (канонический стандарт), значений
- * (UUID, булевы) и логической связки на основе результата парсера.
+ * полей (snake_case + строгий режим {@code preserveOriginalFieldNames}),
+ * операторов (канонический стандарт), значений (UUID, булевы) и логической
+ * связки на основе результата парсера.
  */
 class CanonicalConditionBuilderTest {
 
@@ -83,6 +84,47 @@ class CanonicalConditionBuilderTest {
                 "Явный маппинг 1С-имени имеет приоритет");
         assertEquals("регион", result.getRules().get(1).getField(),
                 "Немаппируемые поля обрабатываются общей нормализацией");
+    }
+
+    /**
+     * Тест 1 (по ТЗ): флаг {@code preserveOriginalFieldNames} выключен (по умолчанию) —
+     * точечные пути к реквизитам 1С схлопываются в snake_case: точки заменяются
+     * подчёркиванием, регистр приводится к нижнему.
+     */
+    @ParameterizedTest(name = "строгий режим выключен: ''{0}'' → ''{1}''")
+    @CsvSource({
+            "ОбъектСтрахования.СтранаРегистрации, объект_страхования_страна_регистрации",
+            "Контрагент.ЮрФизЛицо, контрагент_юр_физ_лицо",
+            "ПервоначальныйДоговор.Век21_КатегорияДоговора, первоначальный_договор_век21_категория_договора"
+    })
+    void dottedPathsAreFlattenedBySnakeCaseWhenPreserveFlagIsOff(String rawField, String expected) {
+        CanonicalConditionDto result = builder.build(conditionOf(
+                new RuleDto(rawField, "EQ", List.of("A"))));
+
+        assertEquals(expected, result.getRules().get(0).getField(),
+                "Точки и CamelCase-границы схлопываются в snake_case (текущий формат)");
+    }
+
+    /**
+     * Тест 2 (по ТЗ): флаг {@code preserveOriginalFieldNames} включён —
+     * точечные пути к реквизитам 1С передаются в канонический JSON без изменений:
+     * сохраняются регистр и точки, точка НЕ заменяется подчёркиванием.
+     */
+    @ParameterizedTest(name = "строгий режим включён: ''{0}'' остаётся без изменений")
+    @CsvSource({
+            "ОбъектСтрахования.СтранаРегистрации",
+            "Контрагент.ЮрФизЛицо",
+            "ПервоначальныйДоговор.Век21_КатегорияДоговора"
+    })
+    void dottedPathsArePreservedAsIsWhenPreserveFlagIsOn(String rawField) {
+        CanonicalConditionBuilder strictBuilder =
+                new CanonicalConditionBuilder(new TransformerConfig(true));
+
+        CanonicalConditionDto result = strictBuilder.build(conditionOf(
+                new RuleDto(rawField, "EQ", List.of("A"))));
+
+        assertEquals(rawField, result.getRules().get(0).getField(),
+                "Регистр и точки сохраняются: точка не заменяется подчёркиванием");
     }
 
     // ------------------------------------------------------------------
