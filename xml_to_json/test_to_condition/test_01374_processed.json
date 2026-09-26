@@ -9,28 +9,60 @@
       "conditionName" : "Регистрация Собственника районы Крыма ",
       "canonical" : {
         "logic" : "OR",
-        "rules" : [ ]
+        "rules" : [ {
+          "field" : "город_фиас",
+          "operator" : "IN",
+          "values" : [ "b7b1ef3e-bd1c-4080-80ea-f0580b40281b", "afb681bd-4264-40ce-a676-cab8b33c7ca0", "9481ba52-663f-4cac-9ba9-67f168016eab", "e11bab0f-338d-43e0-bfa4-1d3c87759e2a", "ddc99126-8c9c-49e0-be2b-e05d2dcdf22e", "1fb30227-c758-4b1a-814b-eab9c8e7a582", "8000a81d-5035-43f1-82ab-e8be388af860", "c24797d4-43e8-470f-9b4b-de57db14cb72", "b30938ee-407c-4c56-8946-95a888735dfe", "0459ee79-6bd5-411b-8fd4-4c9864418fdc" ]
+        }, {
+          "field" : "район_фиас",
+          "operator" : "IN",
+          "values" : [ "b1f8603c-22c1-4c0d-9297-4d5cbef9b0ee", "5c6a204a-5468-46d8-8cf3-1121232ace22", "25002033-9830-4b3c-aa8c-3501d1a34898", "5df661a2-b724-412c-a0b4-4b70ed26e05e", "02cc296d-b15f-446b-a856-86cdc087b593", "449d1089-7126-4af6-b5de-aba83ca33db8", "9d5f8ade-6f9d-46c0-9aab-9fcae5dd5a2e", "9ebe3b6c-d859-45b2-afe1-fc97407b3a02", "0989cf50-3130-46c8-b121-c3e38e93002b", "33b76096-93f4-4709-bae2-f140830ca585", "b27a6bf8-a714-41d0-a561-cf928a7581b5", "f2832bd7-2259-4734-a5ef-152dcf0010f3", "0560cf17-9698-40ee-b462-f65afce6e1f0", "ff26b263-42b0-4bdf-8aaf-7111c281ea2c" ]
+        } ]
       }
     }, {
       "conditionId" : "167cc6bd-dd79-11ef-998b-86c6308b17d6",
       "conditionName" : "ОСАГО Перестрахование",
       "canonical" : {
-        "logic" : null,
-        "rules" : [ ]
+        "logic" : "AND",
+        "rules" : [ {
+          "field" : "перестрахование_рса",
+          "operator" : "EQ",
+          "values" : [ "false" ]
+        }, {
+          "field" : "страховой_продукт",
+          "operator" : "EQ",
+          "values" : [ "342ec861-3f65-11e6-9e61-7824af33beda" ]
+        } ]
       }
     }, {
       "conditionId" : "a75254ce-9cff-11f0-99ab-0050569df0b4",
       "conditionName" : "ОСАГО РФ все",
       "canonical" : {
-        "logic" : null,
-        "rules" : [ ]
+        "logic" : "AND",
+        "rules" : [ {
+          "field" : "страховой_продукт",
+          "operator" : "EQ",
+          "values" : [ "342ec861-3f65-11e6-9e61-7824af33beda" ]
+        }, {
+          "field" : "объект_страхования_страна_регистрации",
+          "operator" : "EQ",
+          "values" : [ "c498e3ad-4f3d-11e6-80d4-002590393a15" ]
+        } ]
       }
     }, {
       "conditionId" : "4b7b094f-4ed4-11f1-99ad-0050569df0b4",
       "conditionName" : "Категория договора ОСАГО - Переход из другой страховой",
       "canonical" : {
         "logic" : "OR",
-        "rules" : [ ]
+        "rules" : [ {
+          "field" : "век21_категория_договора",
+          "operator" : "IN",
+          "values" : [ "TRANSITION", "TRANSITION_EARLY" ]
+        }, {
+          "field" : "первоначальный_договор_век21_категория_договора",
+          "operator" : "IN",
+          "values" : [ "TRANSITION", "TRANSITION_EARLY" ]
+        } ]
       }
     } ]
   }, {
@@ -41,35 +73,71 @@
       "conditionName" : "ОСАГО Города Регион:  Херсонская обл Донецкая обл Луганская обл Запорожская обл",
       "canonical" : {
         "logic" : "OR",
-        "rules" : [ ]
+        "rules" : [ {
+          "field" : "регион_фиас",
+          "operator" : "IN",
+          "values" : [ "486c7c54-caa1-4b04-8dd3-c182313337fc", "d28a09a6-ad4e-407a-ad64-c208549befc4", "10530e14-2627-4e68-aae4-c57373defcf4", "7bac30d2-0e95-499e-a34a-7351a8f13833" ]
+        } ]
       }
     }, {
       "conditionId" : "a75254ce-9cff-11f0-99ab-0050569df0b4",
       "conditionName" : "ОСАГО РФ все",
       "canonical" : {
-        "logic" : null,
-        "rules" : [ ]
+        "logic" : "AND",
+        "rules" : [ {
+          "field" : "страховой_продукт",
+          "operator" : "EQ",
+          "values" : [ "342ec861-3f65-11e6-9e61-7824af33beda" ]
+        }, {
+          "field" : "объект_страхования_страна_регистрации",
+          "operator" : "EQ",
+          "values" : [ "c498e3ad-4f3d-11e6-80d4-002590393a15" ]
+        } ]
       }
     }, {
       "conditionId" : "167cc6bd-dd79-11ef-998b-86c6308b17d6",
       "conditionName" : "ОСАГО Перестрахование",
       "canonical" : {
-        "logic" : null,
-        "rules" : [ ]
+        "logic" : "AND",
+        "rules" : [ {
+          "field" : "перестрахование_рса",
+          "operator" : "EQ",
+          "values" : [ "false" ]
+        }, {
+          "field" : "страховой_продукт",
+          "operator" : "EQ",
+          "values" : [ "342ec861-3f65-11e6-9e61-7824af33beda" ]
+        } ]
       }
     }, {
       "conditionId" : "edb90698-a90d-11f0-99ab-0050569df0b4",
       "conditionName" : "ОСАГО Страхователь ФЛ",
       "canonical" : {
-        "logic" : null,
-        "rules" : [ ]
+        "logic" : "AND",
+        "rules" : [ {
+          "field" : "страховой_продукт",
+          "operator" : "EQ",
+          "values" : [ "342ec861-3f65-11e6-9e61-7824af33beda" ]
+        }, {
+          "field" : "контрагент_юр_физ_лицо",
+          "operator" : "EQ",
+          "values" : [ "ФизЛицо" ]
+        } ]
       }
     }, {
       "conditionId" : "a646923f-a1f5-11f1-99b0-0050569df0b4",
       "conditionName" : "Категория договора ОСАГО - Кроме Переход из другой страховой",
       "canonical" : {
         "logic" : "OR",
-        "rules" : [ ]
+        "rules" : [ {
+          "field" : "век21_категория_договора",
+          "operator" : "NOT_IN",
+          "values" : [ "TRANSITION", "TRANSITION_EARLY" ]
+        }, {
+          "field" : "первоначальный_договор_век21_категория_договора",
+          "operator" : "NOT_IN",
+          "values" : [ "TRANSITION", "TRANSITION_EARLY" ]
+        } ]
       }
     } ]
   }, {
@@ -80,35 +148,75 @@
       "conditionName" : "ОСАГО Города: г.Керчь г.Саки г.Судак г.Ялта г.Евпатория г.Феодосия г.Алушта Армянск г Районы: р-он Б",
       "canonical" : {
         "logic" : "OR",
-        "rules" : [ ]
+        "rules" : [ {
+          "field" : "город_фиас",
+          "operator" : "IN",
+          "values" : [ "b6f02e8f-5274-441b-8581-05f315c488d3", "d951ae45-bc0e-4916-a549-27108d5ffc79", "c111376d-f7a3-4bec-b6f5-6453729ce6a3", "8000a81d-5035-43f1-82ab-e8be388af860", "1af88ef3-e0ce-44a4-b74d-57bfbf748749", "530c1123-4df5-4c59-af4e-eba6379f3824", "c24797d4-43e8-470f-9b4b-de57db14cb72", "b5840ec1-f72c-48a2-bc32-6608f64b5787" ]
+        }, {
+          "field" : "район_фиас",
+          "operator" : "IN",
+          "values" : [ "b1f8603c-22c1-4c0d-9297-4d5cbef9b0ee", "5c6a204a-5468-46d8-8cf3-1121232ace22", "25002033-9830-4b3c-aa8c-3501d1a34898", "5df661a2-b724-412c-a0b4-4b70ed26e05e", "449d1089-7126-4af6-b5de-aba83ca33db8", "9d5f8ade-6f9d-46c0-9aab-9fcae5dd5a2e" ]
+        } ]
       }
     }, {
       "conditionId" : "a75254ce-9cff-11f0-99ab-0050569df0b4",
       "conditionName" : "ОСАГО РФ все",
       "canonical" : {
-        "logic" : null,
-        "rules" : [ ]
+        "logic" : "AND",
+        "rules" : [ {
+          "field" : "страховой_продукт",
+          "operator" : "EQ",
+          "values" : [ "342ec861-3f65-11e6-9e61-7824af33beda" ]
+        }, {
+          "field" : "объект_страхования_страна_регистрации",
+          "operator" : "EQ",
+          "values" : [ "c498e3ad-4f3d-11e6-80d4-002590393a15" ]
+        } ]
       }
     }, {
       "conditionId" : "167cc6bd-dd79-11ef-998b-86c6308b17d6",
       "conditionName" : "ОСАГО Перестрахование",
       "canonical" : {
-        "logic" : null,
-        "rules" : [ ]
+        "logic" : "AND",
+        "rules" : [ {
+          "field" : "перестрахование_рса",
+          "operator" : "EQ",
+          "values" : [ "false" ]
+        }, {
+          "field" : "страховой_продукт",
+          "operator" : "EQ",
+          "values" : [ "342ec861-3f65-11e6-9e61-7824af33beda" ]
+        } ]
       }
     }, {
       "conditionId" : "edb90698-a90d-11f0-99ab-0050569df0b4",
       "conditionName" : "ОСАГО Страхователь ФЛ",
       "canonical" : {
-        "logic" : null,
-        "rules" : [ ]
+        "logic" : "AND",
+        "rules" : [ {
+          "field" : "страховой_продукт",
+          "operator" : "EQ",
+          "values" : [ "342ec861-3f65-11e6-9e61-7824af33beda" ]
+        }, {
+          "field" : "контрагент_юр_физ_лицо",
+          "operator" : "EQ",
+          "values" : [ "ФизЛицо" ]
+        } ]
       }
     }, {
       "conditionId" : "a646923f-a1f5-11f1-99b0-0050569df0b4",
       "conditionName" : "Категория договора ОСАГО - Кроме Переход из другой страховой",
       "canonical" : {
         "logic" : "OR",
-        "rules" : [ ]
+        "rules" : [ {
+          "field" : "век21_категория_договора",
+          "operator" : "NOT_IN",
+          "values" : [ "TRANSITION", "TRANSITION_EARLY" ]
+        }, {
+          "field" : "первоначальный_договор_век21_категория_договора",
+          "operator" : "NOT_IN",
+          "values" : [ "TRANSITION", "TRANSITION_EARLY" ]
+        } ]
       }
     } ]
   }, {
@@ -119,35 +227,75 @@
       "conditionName" : "ОСАГО Города: Красноперекопск г Джанкой г Районы: Нижнегорский р-н Первомайский р-н Советский р-н Дж",
       "canonical" : {
         "logic" : "OR",
-        "rules" : [ ]
+        "rules" : [ {
+          "field" : "город_фиас",
+          "operator" : "IN",
+          "values" : [ "0459ee79-6bd5-411b-8fd4-4c9864418fdc", "b30938ee-407c-4c56-8946-95a888735dfe" ]
+        }, {
+          "field" : "район_фиас",
+          "operator" : "IN",
+          "values" : [ "9ebe3b6c-d859-45b2-afe1-fc97407b3a02", "0989cf50-3130-46c8-b121-c3e38e93002b", "33b76096-93f4-4709-bae2-f140830ca585", "b27a6bf8-a714-41d0-a561-cf928a7581b5", "f2832bd7-2259-4734-a5ef-152dcf0010f3", "0560cf17-9698-40ee-b462-f65afce6e1f0", "ff26b263-42b0-4bdf-8aaf-7111c281ea2c" ]
+        } ]
       }
     }, {
       "conditionId" : "a75254ce-9cff-11f0-99ab-0050569df0b4",
       "conditionName" : "ОСАГО РФ все",
       "canonical" : {
-        "logic" : null,
-        "rules" : [ ]
+        "logic" : "AND",
+        "rules" : [ {
+          "field" : "страховой_продукт",
+          "operator" : "EQ",
+          "values" : [ "342ec861-3f65-11e6-9e61-7824af33beda" ]
+        }, {
+          "field" : "объект_страхования_страна_регистрации",
+          "operator" : "EQ",
+          "values" : [ "c498e3ad-4f3d-11e6-80d4-002590393a15" ]
+        } ]
       }
     }, {
       "conditionId" : "167cc6bd-dd79-11ef-998b-86c6308b17d6",
       "conditionName" : "ОСАГО Перестрахование",
       "canonical" : {
-        "logic" : null,
-        "rules" : [ ]
+        "logic" : "AND",
+        "rules" : [ {
+          "field" : "перестрахование_рса",
+          "operator" : "EQ",
+          "values" : [ "false" ]
+        }, {
+          "field" : "страховой_продукт",
+          "operator" : "EQ",
+          "values" : [ "342ec861-3f65-11e6-9e61-7824af33beda" ]
+        } ]
       }
     }, {
       "conditionId" : "edb90698-a90d-11f0-99ab-0050569df0b4",
       "conditionName" : "ОСАГО Страхователь ФЛ",
       "canonical" : {
-        "logic" : null,
-        "rules" : [ ]
+        "logic" : "AND",
+        "rules" : [ {
+          "field" : "страховой_продукт",
+          "operator" : "EQ",
+          "values" : [ "342ec861-3f65-11e6-9e61-7824af33beda" ]
+        }, {
+          "field" : "контрагент_юр_физ_лицо",
+          "operator" : "EQ",
+          "values" : [ "ФизЛицо" ]
+        } ]
       }
     }, {
       "conditionId" : "a646923f-a1f5-11f1-99b0-0050569df0b4",
       "conditionName" : "Категория договора ОСАГО - Кроме Переход из другой страховой",
       "canonical" : {
         "logic" : "OR",
-        "rules" : [ ]
+        "rules" : [ {
+          "field" : "век21_категория_договора",
+          "operator" : "NOT_IN",
+          "values" : [ "TRANSITION", "TRANSITION_EARLY" ]
+        }, {
+          "field" : "первоначальный_договор_век21_категория_договора",
+          "operator" : "NOT_IN",
+          "values" : [ "TRANSITION", "TRANSITION_EARLY" ]
+        } ]
       }
     } ]
   }, {
@@ -157,29 +305,57 @@
       "conditionId" : "5ab83d7a-dd7e-11ef-998b-86c6308b17d6",
       "conditionName" : "ОСАГО Иностр. для Всех",
       "canonical" : {
-        "logic" : null,
-        "rules" : [ ]
+        "logic" : "AND",
+        "rules" : [ {
+          "field" : "страховой_продукт",
+          "operator" : "EQ",
+          "values" : [ "342ec861-3f65-11e6-9e61-7824af33beda" ]
+        }, {
+          "field" : "объект_страхования_страна_регистрации",
+          "operator" : "NEQ",
+          "values" : [ "c498e3ad-4f3d-11e6-80d4-002590393a15" ]
+        } ]
       }
     }, {
       "conditionId" : "167cc6bd-dd79-11ef-998b-86c6308b17d6",
       "conditionName" : "ОСАГО Перестрахование",
       "canonical" : {
-        "logic" : null,
-        "rules" : [ ]
+        "logic" : "AND",
+        "rules" : [ {
+          "field" : "перестрахование_рса",
+          "operator" : "EQ",
+          "values" : [ "false" ]
+        }, {
+          "field" : "страховой_продукт",
+          "operator" : "EQ",
+          "values" : [ "342ec861-3f65-11e6-9e61-7824af33beda" ]
+        } ]
       }
     }, {
       "conditionId" : "668a3b90-eadd-11ef-998b-86c6308b17d6",
       "conditionName" : "КТ 30_ТЧ",
       "canonical" : {
-        "logic" : null,
-        "rules" : [ ]
+        "logic" : "AND",
+        "rules" : [ {
+          "field" : "коэффициенты_осаго_кт",
+          "operator" : "NEQ",
+          "values" : [ "30" ]
+        } ]
       }
     }, {
       "conditionId" : "5e01533b-84b3-11f0-99ab-0050569df0b4",
       "conditionName" : "ОСАГО_страхователь/собственник НЕ Россия",
       "canonical" : {
         "logic" : "OR",
-        "rules" : [ ]
+        "rules" : [ {
+          "field" : "собственник_тс_государство",
+          "operator" : "NEQ",
+          "values" : [ "60750827-4a79-11e6-bec9-ac7ba154cc6a" ]
+        }, {
+          "field" : "контрагент_государство",
+          "operator" : "NEQ",
+          "values" : [ "60750827-4a79-11e6-bec9-ac7ba154cc6a" ]
+        } ]
       }
     } ]
   }, {
@@ -190,28 +366,68 @@
       "conditionName" : "Регистрация Собственника г. Севастополь, г. Симферополь, Симферопольский р-н",
       "canonical" : {
         "logic" : "OR",
-        "rules" : [ ]
+        "rules" : [ {
+          "field" : "город_фиас",
+          "operator" : "IN",
+          "values" : [ "633c540e-efaa-44c1-9c5f-3cbf3215f7df" ]
+        }, {
+          "field" : "район_фиас",
+          "operator" : "IN",
+          "values" : [ "02cc296d-b15f-446b-a856-86cdc087b593" ]
+        }, {
+          "field" : "регион_фиас",
+          "operator" : "IN",
+          "values" : [ "6fdecb78-893a-4e3f-a5ba-aa062459463b" ]
+        } ]
       }
     }, {
       "conditionId" : "167cc6bd-dd79-11ef-998b-86c6308b17d6",
       "conditionName" : "ОСАГО Перестрахование",
       "canonical" : {
-        "logic" : null,
-        "rules" : [ ]
+        "logic" : "AND",
+        "rules" : [ {
+          "field" : "перестрахование_рса",
+          "operator" : "EQ",
+          "values" : [ "false" ]
+        }, {
+          "field" : "страховой_продукт",
+          "operator" : "EQ",
+          "values" : [ "342ec861-3f65-11e6-9e61-7824af33beda" ]
+        } ]
       }
     }, {
       "conditionId" : "f0895d11-64f3-11f1-99ad-0050569df0b4",
       "conditionName" : "ОСАГО РФ Страхователь ФЛ",
       "canonical" : {
-        "logic" : null,
-        "rules" : [ ]
+        "logic" : "AND",
+        "rules" : [ {
+          "field" : "страховой_продукт",
+          "operator" : "EQ",
+          "values" : [ "342ec861-3f65-11e6-9e61-7824af33beda" ]
+        }, {
+          "field" : "объект_страхования_страна_регистрации",
+          "operator" : "EQ",
+          "values" : [ "c498e3ad-4f3d-11e6-80d4-002590393a15" ]
+        }, {
+          "field" : "контрагент_юр_физ_лицо",
+          "operator" : "EQ",
+          "values" : [ "ФизЛицо" ]
+        } ]
       }
     }, {
       "conditionId" : "4b7b094f-4ed4-11f1-99ad-0050569df0b4",
       "conditionName" : "Категория договора ОСАГО - Переход из другой страховой",
       "canonical" : {
         "logic" : "OR",
-        "rules" : [ ]
+        "rules" : [ {
+          "field" : "век21_категория_договора",
+          "operator" : "IN",
+          "values" : [ "TRANSITION", "TRANSITION_EARLY" ]
+        }, {
+          "field" : "первоначальный_договор_век21_категория_договора",
+          "operator" : "IN",
+          "values" : [ "TRANSITION", "TRANSITION_EARLY" ]
+        } ]
       }
     } ]
   } ]

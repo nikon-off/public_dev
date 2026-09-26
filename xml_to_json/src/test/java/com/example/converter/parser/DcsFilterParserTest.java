@@ -14,17 +14,26 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Юнит-тесты парсера {@link DcsFilterParser} на реальном фрагменте
  * XML-настроек 1С (Data Composition System) с множественными namespaces.
+ *
+ * <p>
+ * Покрываются оба формата сериализации сравнений:
+ * <ul>
+ * <li>синтетический формат из документации ({@code leftValuePath}/
+ * {@code rightValue}>{@code value});</li>
+ * <li>реальный формат DCS из контракта ({@code left}/{@code comparisonType}/
+ * повторяющиеся {@code right}, каждый с атрибутом {@code xsi:type}).</li>
+ * </ul>
  */
 class DcsFilterParserTest {
 
     private final DcsFilterParser parser = new DcsFilterParser();
 
     /** Общие namespace-объявления из документации 1С DCS. */
-    private static final String NAMESPACES =
-            "xmlns=\"http://v8.1c.ru/8.1/data-composition-system/settings\" "
+    private static final String NAMESPACES = "xmlns=\"http://v8.1c.ru/8.1/data-composition-system/settings\" "
             + "xmlns:dcscor=\"http://v8.1c.ru/8.1/data-composition-system/core\" "
             + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
-            + "xmlns:v8=\"http://v8.1c.ru/8.1/data/core\"";
+            + "xmlns:v8=\"http://v8.1c.ru/8.1/data/core\" "
+            + "xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"";
 
     @Test
     void parsesOrGroupWithInListFromDocumentationExample() {
@@ -61,6 +70,87 @@ class DcsFilterParserTest {
                         "22222222-2222-2222-2222-222222222222"),
                 rule.getValues(),
                 "Значения всегда приводятся к списку строк, атрибуты типов игнорируются");
+    }
+
+    @Test
+    void parsesOrGroupWithInListFromRealFormat() {
+        // Реальный формат DCS из контракта: поле в <left xsi:type="dcscor:Field">,
+        // значения — повторяющиеся <right xsi:type="v8:UUID"> (каждый = одно значение).
+        String xml = """
+                <Settings %s>
+                    <filter>
+                        <item xsi:type="FilterItemGroup">
+                            <groupType>OrGroup</groupType>
+                            <item xsi:type="FilterItemComparison">
+                                <left xsi:type="dcscor:Field">ГородФИАС</left>
+                                <comparisonType>InList</comparisonType>
+                                <right xsi:type="v8:UUID">11111111-1111-1111-1111-111111111111</right>
+                                <right xsi:type="v8:UUID">22222222-2222-2222-2222-222222222222</right>
+                                <right xsi:type="v8:UUID">33333333-3333-3333-3333-333333333333</right>
+                            </item>
+                        </item>
+                    </filter>
+                </Settings>
+                """.formatted(NAMESPACES);
+
+        CanonicalConditionDto result = parser.parse(xml);
+
+        assertEquals("OR", result.getLogic(), "OrGroup должен нормализоваться в OR");
+        assertEquals(1, result.getRules().size(), "Должно быть ровно одно правило");
+
+        RuleDto rule = result.getRules().get(0);
+        assertEquals("ГородФИАС", rule.getField(),
+                "Поле читается из тега <left> (текст из поля \"\" узла)");
+        assertEquals("IN", rule.getOperator(), "InList должен нормализоваться в IN");
+        assertEquals(
+                List.of("11111111-1111-1111-1111-111111111111",
+                        "22222222-2222-2222-2222-222222222222",
+                        "33333333-3333-3333-3333-333333333333"),
+                rule.getValues(),
+                "Все повторяющиеся <right> собираются в список значений в порядке следования");
+    }
+
+    @Test
+    void parsesComparisonsDirectlyInFilterAsAnd() {
+        // Реальный контракт («ОСАГО Перестрахование»): два FilterItemComparison
+        // напрямую в <filter> без FilterItemGroup. Первый — xs:boolean false,
+        // второй — локальный xmlns:d4p1 + xsi:type="d4p1:CatalogRef.*" (UUID).
+        String xml = """
+                <Settings %s>
+                    <filter>
+                        <item xsi:type="FilterItemComparison">
+                            <left xsi:type="dcscor:Field">ПерестрахованиеРСА</left>
+                            <comparisonType>Equal</comparisonType>
+                            <right xsi:type="xs:boolean">false</right>
+                        </item>
+                        <item xsi:type="FilterItemComparison">
+                            <left xsi:type="dcscor:Field">СтраховойПродукт</left>
+                            <comparisonType>Equal</comparisonType>
+                            <right xmlns:d4p1="http://v8.1c.ru/8.1/data/enterprise/current-config"
+                                   xsi:type="d4p1:CatalogRef.СтраховойПродукт">342ec861-3f65-11e6-9e61-7824af33beda</right>
+                        </item>
+                    </filter>
+                </Settings>
+                """
+                .formatted(NAMESPACES);
+
+        CanonicalConditionDto result = parser.parse(xml);
+
+        assertEquals("AND", result.getLogic(),
+                "Несколько сравнений напрямую в filter без группы → AND (дефолт DCS)");
+        assertEquals(2, result.getRules().size());
+
+        RuleDto first = result.getRules().get(0);
+        assertEquals("ПерестрахованиеРСА", first.getField());
+        assertEquals("EQ", first.getOperator(), "Equal должен нормализоваться в EQ");
+        assertEquals(List.of("false"), first.getValues(),
+                "xs:boolean false становится строкой \"false\"");
+
+        RuleDto second = result.getRules().get(1);
+        assertEquals("СтраховойПродукт", second.getField());
+        assertEquals("EQ", second.getOperator());
+        assertEquals(List.of("342ec861-3f65-11e6-9e61-7824af33beda"), second.getValues(),
+                "Текст <right> с локальным xmlns:d4p1 извлекается без учёта атрибутов");
     }
 
     @Test

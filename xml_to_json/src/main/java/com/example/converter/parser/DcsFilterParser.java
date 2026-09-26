@@ -15,31 +15,43 @@ import java.util.Map;
  * Парсер XML-фильтров 1С:Предприятие (формат Data Composition System / DCS)
  * в каноническую модель условия {@link CanonicalConditionDto}.
  *
- * <p>Из настроек {@code <Settings>} извлекается только секция {@code <filter>};
- * UI-шум ({@code <selection>}, {@code <title>} и пр.) игнорируется.</p>
+ * <p>
+ * Из настроек {@code <Settings>} извлекается только секция {@code <filter>};
+ * UI-шум ({@code <selection>}, {@code <title>} и пр.) игнорируется.
+ * </p>
  *
- * <p>Реализация построена на {@link XmlMapper#readTree(String)} (Jackson XML):
+ * <p>
+ * Реализация построена на {@link XmlMapper#readTree(String)} (Jackson XML):
  * XML читается в {@link JsonNode}-дерево, которое затем обходится программно.
  * Это надёжнее маппинга на POJO, т.к. элементы фильтра полиморфны
  * (динамический атрибут {@code xsi:type}: {@code FilterItemGroup} /
- * {@code FilterItemComparison}).</p>
+ * {@code FilterItemComparison}).
+ * </p>
  *
  * <h2>Поведение и ограничения</h2>
  * <ul>
- *   <li>{@code null}/{@code blank} вход или отсутствие секции {@code <filter>}
- *       → возвращается пустой {@link CanonicalConditionDto} (логика отсутствия
- *       условия ≠ ошибка контракта).</li>
- *   <li>Невалидный XML (не well-formed) → {@link IllegalArgumentException},
- *       т.к. это ошибка входных данных, а не «условие отсутствует».</li>
- *   <li>Неизвестные теги внутри {@code <filter>} и элементы с неизвестным
- *       {@code xsi:type} молча пропускаются (устойчивость к эволюции формата).</li>
- *   <li>Правило без {@code leftValuePath} или без {@code comparisonType}
- *       считается бесполезным и пропускается.</li>
- *   <li>Вложенные группы ({@code FilterItemGroup} внутри {@code FilterItemGroup})
- *       рекурсивно разворачиваются в плоский список {@code rules}; логика
- *       берётся с верхнего уровня группы. Ограничение текущей модели:
- *       {@link CanonicalConditionDto} не поддерживает вложенность связок
- *       (YAGNI — расширяется при появлении реальной потребности).</li>
+ * <li>{@code null}/{@code blank} вход или отсутствие секции {@code <filter>}
+ * → возвращается пустой {@link CanonicalConditionDto} (логика отсутствия
+ * условия ≠ ошибка контракта).</li>
+ * <li>Невалидный XML (не well-formed) → {@link IllegalArgumentException},
+ * т.к. это ошибка входных данных, а не «условие отсутствует».</li>
+ * <li>Неизвестные теги внутри {@code <filter>} и элементы с неизвестным
+ * {@code xsi:type} молча пропускаются (устойчивость к эволюции формата).</li>
+ * <li>Поле сравнения читается из тега {@code <left>} (реальный формат DCS:
+ * {@code left}/{@code comparisonType}/повторяющиеся {@code right}); значения —
+ * из тегов {@code right} (каждый {@code right} = одно значение). Для
+ * обратной совместимости поддержан синтетический формат из документации:
+ * {@code leftValuePath} и {@code rightValue}>{@code value}.</li>
+ * <li>Правило без поля ({@code left}/{@code leftValuePath}) или без
+ * {@code comparisonType} считается бесполезным и пропускается.</li>
+ * <li>Несколько сравнений {@code FilterItemComparison} напрямую в секции
+ * {@code <filter>} (без обёртки {@code FilterItemGroup}) получают логику
+ * {@code AND} — дефолт DCS для нескольких условий отбора без группы.</li>
+ * <li>Вложенные группы ({@code FilterItemGroup} внутри {@code FilterItemGroup})
+ * рекурсивно разворачиваются в плоский список {@code rules}; логика
+ * берётся с верхнего уровня группы. Ограничение текущей модели:
+ * {@link CanonicalConditionDto} не поддерживает вложенность связок
+ * (YAGNI — расширяется при появлении реальной потребности).</li>
  * </ul>
  */
 public class DcsFilterParser {
@@ -57,8 +69,7 @@ public class DcsFilterParser {
             "InList", "IN",
             "Equal", "EQ",
             "NotEqual", "NEQ",
-            "NotInList", "NOT_IN"
-    );
+            "NotInList", "NOT_IN");
 
     /**
      * Нормализация типа группы 1С → каноническая логическая связка.
@@ -66,8 +77,7 @@ public class DcsFilterParser {
      */
     private static final Map<String, String> GROUP_LOGIC_NORMALIZATION = Map.of(
             "OrGroup", "OR",
-            "AndGroup", "AND"
-    );
+            "AndGroup", "AND");
 
     private final XmlMapper xmlMapper;
 
@@ -111,6 +121,14 @@ public class DcsFilterParser {
      * Рекурсивно обрабатывает группу: находит дочерние {@code <item>} и
      * диспетчеризует их по атрибуту {@code xsi:type}.
      *
+     * <p>
+     * Если после обработки группа не объявила логику (нет {@code groupType}),
+     * но собрала правила, применяется {@code AND} — дефолт DCS для нескольких
+     * условий отбора без группы ({@code FilterItemComparison} напрямую в
+     * {@code <filter>}). Пустая группа правил не даёт логику (остаётся
+     * {@code null}).
+     * </p>
+     *
      * @param groupNode узел группы (или секции {@code <filter>})
      * @param rules     накопитель правил (плоский список)
      * @return нормализованная логика группы (может быть {@code null})
@@ -143,17 +161,31 @@ public class DcsFilterParser {
                 }
             }
         }
+        if (logic == null && !rules.isEmpty()) {
+            logic = "AND"; // несколько сравнений прямо в filter без группы → AND (дефолт DCS)
+        }
         return logic;
     }
 
     /**
      * Преобразует элемент {@code FilterItemComparison} в {@link RuleDto}.
      *
+     * <p>
+     * Поле читается из тега {@code <left>} (реальный формат DCS); при его
+     * отсутствии — fallback на {@code <leftValuePath>} (синтетический формат из
+     * документации). {@code nodeText()} корректно извлекает текст из тега
+     * {@code <left>} с атрибутом {@code xsi:type="dcscor:Field"} (текст лежит
+     * в поле {@code ""} узла).
+     * </p>
+     *
      * @param item узел сравнения
      * @return правило или {@code null}, если поле или оператор отсутствуют
      */
     private RuleDto parseComparison(JsonNode item) {
-        String field = textOfChild(item, "leftValuePath");
+        String field = textOfChild(item, "left");
+        if (isBlank(field)) {
+            field = textOfChild(item, "leftValuePath"); // fallback: синтетический формат из документации
+        }
         String rawOperator = textOfChild(item, "comparisonType");
         if (isBlank(field) || isBlank(rawOperator)) {
             return null;
@@ -163,16 +195,30 @@ public class DcsFilterParser {
     }
 
     /**
-     * Собирает тексты всех узлов {@code <value>} внутри {@code <rightValue>}.
+     * Собирает значения сравнения.
+     *
+     * <p>
+     * Основной путь — повторяющиеся теги {@code <right>} (реальный формат DCS:
+     * каждый {@code right} = одно значение; Jackson свёртывает их в массив,
+     * {@link #childrenNamed} разворачивает). Fallback — узлы {@code <value>}
+     * внутри {@code <rightValue>} (синтетический формат из документации).
+     * </p>
      *
      * @param item узел сравнения
      * @return список значений (никогда {@code null})
      */
     private List<String> collectValues(JsonNode item) {
         List<String> values = new ArrayList<>();
-        JsonNode rightValue = directChild(item, "rightValue");
-        if (rightValue != null) {
-            collectValueNodes(rightValue, values);
+        List<JsonNode> rightNodes = childrenNamed(item, "right");
+        if (!rightNodes.isEmpty()) {
+            for (JsonNode right : rightNodes) {
+                addValueText(right, values);
+            }
+        } else {
+            JsonNode rightValue = directChild(item, "rightValue"); // fallback: формат из документации
+            if (rightValue != null) {
+                collectValueNodes(rightValue, values);
+            }
         }
         return values;
     }
@@ -299,11 +345,13 @@ public class DcsFilterParser {
     /**
      * Значение поля по локальному имени (без учёта namespace префикса).
      *
-     * <p>Специально для {@code xsi:type}: Jackson XML (2.x) с включённой по
+     * <p>
+     * Специально для {@code xsi:type}: Jackson XML (2.x) с включённой по
      * умолчанию фичей {@code AUTO_DETECT_XSI_TYPE} представляет атрибут как
      * обычное поле {@code "xsi:type"}, а с выключенной — как атрибут
      * {@code "@xsi:type"}. Поиск по локальному имени {@code type} покрывает
-     * оба представления.</p>
+     * оба представления.
+     * </p>
      */
     private String fieldLocal(JsonNode node, String localName) {
         Iterator<Map.Entry<String, JsonNode>> fields = node.fields();
@@ -356,7 +404,10 @@ public class DcsFilterParser {
         return value == null || value.isBlank();
     }
 
-    /** Читает XML-дерево; невалидный XML превращает в {@link IllegalArgumentException}. */
+    /**
+     * Читает XML-дерево; невалидный XML превращает в
+     * {@link IllegalArgumentException}.
+     */
     private JsonNode readRoot(String xmlContent) {
         try {
             return xmlMapper.readTree(xmlContent);
