@@ -1,0 +1,24 @@
+{
+  "name": "public_dev",
+  "version": "1.0.0",
+  "description": "Здесь собраны мои коллекции наработок разных скриптов и поделок для облегчения моей рабочей деятельности",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nikon-off/public_dev.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/nikon-off/public_dev/issues"
+  },
+  "homepage": "https://github.com/nikon-off/public_dev#readme",
+  "dependencies": {
+    "@upstash/context7-mcp": "^4.1.1"
+  }
+}
