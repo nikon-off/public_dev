@@ -10,5 +10,8 @@
       ]
     }
   },
-  "snapshot": false
+  "snapshot": false,
+  "skills": {
+    "paths": [".gigacode_vsc/skills"]
+  }
 }
