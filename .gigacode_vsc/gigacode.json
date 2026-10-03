@@ -8,10 +8,20 @@
         "-y",
         "@upstash/context7-mcp"
       ]
+    },
+    "unica": {
+      "type": "stdio",
+      "command": "C:\\dev\\IngvarConsulting\\unica\\target\\release\\unica.exe",
+      "env": {
+        "UNICA_HOST_CONTEXT_REQUIRED": "1"
+      }
     }
   },
   "snapshot": false,
   "skills": {
-    "paths": [".gigacode_vsc/skills"]
+    "paths": [
+      ".gigacode_vsc/skills",
+      ".gigacode_vsc/skills/unica"
+    ]
   }
 }
